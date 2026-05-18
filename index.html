@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="description" content="Portal institucional do CRAS Irismar Wanderley da Costa" />
+  <title>InfoCRAS | Serra Negra do Norte - RN</title>
+
+  <!-- PWA -->
+  <link rel="manifest" id="manifest-placeholder" />
+  <link rel="icon" href="images/logo.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0a0a0f;
+      --bg-soft:#111118;
+      --bg-card:#15151d;
+      --border:#232331;
+      --text:#f2f2f5;
+      --muted:#a3a3b2;
+      --accent:#1ea7ff;
+      --accent-soft:rgba(30,167,255,.12);
+      --shadow:0 20px 50px rgba(0,0,0,.45);
+      --radius:22px;
+      --container:1200px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+      font-family:"Source Sans 3", sans-serif;
+      overflow-x:hidden;
+      line-height:1.6;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+      radial-gradient(circle at top right, rgba(30,167,255,.10), transparent 30%),
+      radial-gradient(circle at bottom left, rgba(30,167,255,.08), transparent 30%);
+      z-index:-1;
+      pointer-events:none;
+    }
+
+    h1,h2,h3,h4{
+      font-family:"Outfit", sans-serif;
+      letter-spacing:-0.03em;
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    .container{
+      width:min(100% - 2rem, var(--container));
+      margin-inline:auto;
+    }
+
+    section{
+      padding:100px 0;
+    }
+
+    .section-title{
+      font-size:clamp(2rem,5vw,3rem);
+      margin-bottom:16px;
+    }
+
+    .section-subtitle{
+      color:var(--muted);
+      max-width:700px;
+      margin-bottom:40px;
+      font-size:1.05rem;
+    }
+
+    /* NAVBAR */
+
+    nav{
+      position:fixed;
+      top:0;
+      width:100%;
+      z-index:999;
+      backdrop-filter:blur(16px);
+      background:rgba(10,10,15,.55);
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+
+    .nav-wrapper{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:16px 0;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .brand img{
+      width:48px;
+      height:48px;
+      border-radius:14px;
+      object-fit:cover;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .brand h3{
+      font-size:1.2rem;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:24px;
+      flex-wrap:wrap;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:var(--muted);
+      transition:.3s;
+      font-weight:500;
+    }
+
+    .nav-links a:hover{
+      color:var(--text);
+    }
+
+    /* HERO */
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1fr 420px;
+      gap:60px;
+      align-items:center;
+    }
+
+    .hero-content h1{
+      font-size:clamp(3rem,7vw,6rem);
+      line-height:.95;
+      margin-bottom:20px;
+    }
+
+    .hero-content p{
+      color:var(--muted);
+      max-width:650px;
+      font-size:1.15rem;
+      margin-bottom:36px;
+    }
+
+    .hero-buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+    }
+
+    .btn{
+      padding:14px 22px;
+      border-radius:16px;
+      text-decoration:none;
+      transition:.3s;
+      border:1px solid transparent;
+      font-weight:600;
+    }
+
+    .btn-primary{
+      background:var(--accent);
+      color:#fff;
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 12px 30px rgba(30,167,255,.25);
+    }
+
+    .btn-secondary{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+      color:var(--text);
+    }
+
+    .btn-secondary:hover{
+      background:rgba(255,255,255,.08);
+      border-color:rgba(30,167,255,.35);
+    }
+
+    .hero-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:32px;
+      padding:40px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero-card::before{
+      content:"";
+      position:absolute;
+      width:220px;
+      height:220px;
+      background:rgba(30,167,255,.12);
+      border-radius:50%;
+      top:-70px;
+      right:-70px;
+      filter:blur(30px);
+    }
+
+    .hero-card img{
+      width:110px;
+      margin-bottom:24px;
+    }
+
+    .hero-card h3{
+      margin-bottom:14px;
+      font-size:1.7rem;
+    }
+
+    .hero-card p{
+      color:var(--muted);
+    }
+
+    /* INSTALL BUTTON */
+
+    .install-banner{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      z-index:9999;
+      display:none;
+    }
+
+    .install-btn{
+      background:var(--accent);
+      border:none;
+      color:#fff;
+      padding:14px 18px;
+      border-radius:16px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 12px 30px rgba(30,167,255,.25);
+    }
+
+    /* GENERIC CARD */
+
+    /*
+      ALTERE A LARGURA E ALTURA DOS CARDS AQUI
+      width: ;
+      min-height: ;
+    */
+
+    .card{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:28px;
+      transition:.35s;
+      position:relative;
+      overflow:hidden;
+      width:100%;
+      min-height:220px;
+    }
+
+    .card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(30,167,255,.3);
+      box-shadow:0 20px 40px rgba(0,0,0,.35);
+    }
+
+    /* ABOUT */
+
+    .about-box{
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border:1px solid rgba(255,255,255,.06);
+      padding:40px;
+      border-radius:32px;
+      color:var(--muted);
+      font-size:1.1rem;
+    }
+
+    /* WHATSAPP */
+
+    .grid{
+      display:grid;
+      gap:24px;
+    }
+
+    .grid-4{
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    }
+
+    .whatsapp-card h3{
+      margin-bottom:8px;
+    }
+
+    .whatsapp-card p{
+      color:var(--muted);
+      margin-bottom:18px;
+    }
+
+    .whatsapp-link{
+      text-decoration:none;
+      color:var(--accent);
+      font-weight:600;
+    }
+
+    /* HORARIOS */
+
+    .schedule-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:22px;
+    }
+
+    .schedule-day{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:24px;
+    }
+
+    .schedule-day h3{
+      margin-bottom:14px;
+    }
+
+    .schedule-day ul{
+      list-style:none;
+      color:var(--muted);
+    }
+
+    .schedule-day li{
+      margin-bottom:10px;
+    }
+
+    /* TEAM */
+
+    .team-group{
+      margin-bottom:70px;
+    }
+
+    .team-group h3{
+      margin-bottom:24px;
+      font-size:1.8rem;
+    }
+
+    .team-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:24px;
+    }
+
+    /*
+      ALTERE A ALTURA E LARGURA DOS CARDS DA EQUIPE AQUI
+      width: ;
+      min-height: ;
+    */
+
+    .team-card{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:28px;
+      padding:28px;
+      position:relative;
+      overflow:hidden;
+      transition:.35s;
+      min-height:260px;
+    }
+
+    .team-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(30,167,255,.3);
+    }
+
+    .team-photo{
+      width:78px;
+      height:78px;
+      border-radius:50%;
+      overflow:hidden;
+      border:2px solid rgba(255,255,255,.08);
+      margin-bottom:18px;
+    }
+
+    .team-photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .team-role{
+      color:var(--accent);
+      margin-top:6px;
+      margin-bottom:10px;
+      font-weight:600;
+    }
+
+    .team-time{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    /* POSTS */
+
+    .posts-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:24px;
+    }
+
+    /*
+      ALTERE A ALTURA E LARGURA DOS CARDS DO MURAL AQUI
+      width: ;
+      min-height: ;
+    */
+
+    .post-card{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:28px;
+      overflow:hidden;
+      cursor:pointer;
+      transition:.35s;
+      min-height:450px;
+    }
+
+    .post-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(30,167,255,.35);
+    }
+
+    .post-image{
+      height:220px;
+      background:#1a1a24;
+      overflow:hidden;
+    }
+
+    .post-image img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .post-content{
+      padding:24px;
+    }
+
+    .post-content h3{
+      margin-bottom:10px;
+    }
+
+    .post-date{
+      color:var(--accent);
+      font-size:.92rem;
+      margin-bottom:12px;
+      display:block;
+    }
+
+    .post-preview{
+      color:var(--muted);
+      display:-webkit-box;
+      -webkit-line-clamp:3;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .post-full{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .4s ease;
+      color:var(--muted);
+      margin-top:12px;
+    }
+
+    .post-card.active .post-full{
+      max-height:500px;
+    }
+
+    .post-btn{
+      margin-top:18px;
+      display:inline-flex;
+      text-decoration:none;
+      color:#fff;
+      background:var(--accent);
+      padding:10px 16px;
+      border-radius:12px;
+      font-weight:600;
+    }
+
+    /* FOOTER */
+
+    footer{
+      border-top:1px solid rgba(255,255,255,.06);
+      padding:40px 0;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    /* ANIMATION */
+
+    .reveal{
+      opacity:0;
+      transform:translateY(40px);
+      transition:1s ease;
+    }
+
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    @media(max-width:980px){
+
+      .hero-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero{
+        padding-top:120px;
+      }
+
+      .nav-links{
+        display:none;
+      }
+
+      section{
+        padding:80px 0;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav>
+    <div class="container nav-wrapper">
+      <div class="brand">
+        <img src="images/logo.png" alt="Logo CRAS">
+        <div>
+          <h3>InfoCRAS</h3>
+        </div>
+      </div>
+
+      <div class="nav-links">
+        <a href="#quem-somos">Quem somos</a>
+        <a href="#whatsapp">WhatsApp</a>
+        <a href="#horarios">Horários</a>
+        <a href="#equipe">Equipe</a>
+        <a href="#avisos">Mural</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div class="hero-content reveal">
+          <h1>InfoCRAS</h1>
+
+          <p>
+            Portal de comunicação e informações do Centro de Referência da Assistência Social de Serra Negra do Norte – RN.
+            Informações institucionais, equipe, horários de funcionamento e comunicação direta em um único ambiente.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#quem-somos" class="btn btn-primary">Quem somos</a>
+            <a href="#whatsapp" class="btn btn-secondary">WhatsApp</a>
+            <a href="#horarios" class="btn btn-secondary">Horários de funcionamento</a>
+            <a href="#equipe" class="btn btn-secondary">Equipe</a>
+            <a href="#avisos" class="btn btn-secondary">Mural de avisos</a>
+          </div>
+        </div>
+
+        <div class="hero-card reveal">
+          <img src="images/logo.png" alt="Logo">
+
+          <h3>CRAS “Irismar Wanderley da Costa”</h3>
+
+          <p>
+            Serra Negra do Norte – Rio Grande do Norte.
+            Plataforma institucional responsiva desenvolvida para acesso rápido a informações, equipe técnica e comunicados oficiais.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- QUEM SOMOS -->
+
+    <section id="quem-somos">
+      <div class="container">
+
+        <h2 class="section-title reveal">Quem somos</h2>
+
+        <p class="section-subtitle reveal">
+          Espaço institucional destinado à apresentação do CRAS e suas atividades.
+        </p>
+
+        <div class="about-box reveal">
+          INSIRA AQUI O TEXTO INSTITUCIONAL DO CRAS.
+          <br><br>
+          Você pode adicionar informações sobre:
+          missão, valores, atuação social, serviços ofertados,
+          programas sociais, atendimento à população e histórico da instituição.
+        </div>
+
+      </div>
+    </section>
+
+    <!-- WHATSAPP -->
+
+    <section id="whatsapp">
+      <div class="container">
+
+        <h2 class="section-title reveal">Canais de WhatsApp</h2>
+
+        <p class="section-subtitle reveal">
+          Comunicação direta com setores e profissionais da assistência social.
+        </p>
+
+        <div class="grid grid-4">
+
+          <article class="card whatsapp-card reveal">
+            <h3>Jose Xavier</h3>
+            <p>Secretário municipal do trabalho, habitação e assistencia social</p>
+            <a href="#" class="whatsapp-link">Entrar em contato</a>
+          </article>
+
+          <article class="card whatsapp-card reveal">
+            <h3>CRAS "Irismar Wanderley da Costa"</h3>
+            <p>Contato institucional</p>
+            <a href="#" class="whatsapp-link">Entrar em contato</a>
+          </article>
+
+          <article class="card whatsapp-card reveal">
+            <h3>Setor do Cadastro Unico para Programas Sociais</h3>
+            <p>Atendimento Psicossocial</p>
+            <a href="#" class="whatsapp-link">Entrar em contato</a>
+          </article>
+
+          <article class="card whatsapp-card reveal">
+            <h3>CREAS - Centro de Referência Especial da Assitencia Social</h3>
+            <p>Contato institucional</p>
+            <a href="#" class="whatsapp-link">Entrar em contato</a>
+          </article>
+
+          <article class="card whatsapp-card reveal">
+            <h3>Conselho Tutelar</h3>
+            <p>Contato institucional</p>
+            <a href="#" class="whatsapp-link">Entrar em contato</a>
+          </article>
+
+          <article class="card whatsapp-card reveal">
+            <h3>Carlos Henrique</h3>
+            <p>Atendimento Psicossocial</p>
+            <a href="#" class="whatsapp-link">Entrar em contato</a>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HORARIOS -->
+
+    <section id="horarios">
+      <div class="container">
+
+        <h2 class="section-title reveal">Horários de funcionamento</h2>
+
+        <p class="section-subtitle reveal">
+          Organização semanal dos horários e profissionais em expediente.
+        </p>
+
+        <div class="schedule-grid">
+
+          <div class="schedule-day reveal">
+            <h3>Segunda-feira</h3>
+            <ul>
+              <li>Manhã: 07:00 às 11:00</li>
+              <li>Tarde: 13:00 às 17:00</li>
+              <li>Nelson Pereira — Coordenador</li>
+              <li>Cesar Santana — Psicólogo</li>
+			  <li>Kátia Cilene — Assistente social</li>
+              <li>Gabriela — Cadastro único</li>
+              <li>Taynara — Cadastro único</li>
+            </ul>
+          </div>
+
+          <div class="schedule-day reveal">
+            <h3>Terça-feira</h3>
+            <ul>
+              <li>Manhã: 07:00 às 11:00</li>
+              <li>Tarde: 13:00 às 17:00</li>
+              <li>Nelson Pereira — Coordenador</li>
+              <li>Cesar Santana — Psicólogo</li>
+              <li>Gabriela — Cadastro único</li>
+              <li>Taynara — Cadastro único</li>
+            </ul>
+          </div>
+
+          <div class="schedule-day reveal">
+            <h3>Quarta-feira</h3>
+            <ul>
+              <li>Manhã: 07:00 às 11:00</li>
+              <li>Tarde: 13:00 às 17:00</li>
+              <li>Nelson Pereira — Coordenador</li>
+              <li>Cesar Santana — Psicólogo</li>
+			  <li>Kátia Cilene — Assistente social</li>
+			  <li>Kaliane Faria — Assistente social</li>
+              <li>Gabriela — Cadastro único</li>
+              <li>Taynara — Cadastro único</li>
+            </ul>
+          </div>
+
+          <div class="schedule-day reveal">
+            <h3>Quinta-feira</h3>
+            <ul>
+              <li>Manhã: 07:00 às 11:00</li>
+              <li>Tarde: 13:00 às 17:00</li>
+              <li>Nelson Pereira — Coordenador</li>
+			  <li>Kaliane Faria — Assistente social</li>
+              <li>Gabriela — Cadastro único</li>
+              <li>Taynara — Cadastro único</li>
+            </ul>
+          </div>
+
+          <div class="schedule-day reveal">
+            <h3>Sexta-feira</h3>
+            <ul>
+              <li>Manhã: 07:00 às 11:00</li>
+              <li>Tarde: 13:00 às 17:00</li>
+			  <li>Nelson Pereira — Coordenador</li>
+			  <li>Kátia Cilene — Assistente social</li>
+			  <li>Kaliane Faria — Assistente social</li>
+              <li>Gabriela — Cadastro único</li>
+              <li>Taynara — Cadastro único</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EQUIPE -->
+
+    <section id="equipe">
+      <div class="container">
+
+        <h2 class="section-title reveal">Equipe</h2>
+
+        <p class="section-subtitle reveal">
+          Estrutura organizacional dividida por equipes e setores.
+        </p>
+
+        <!-- EQUIPE 1 -->
+
+        <div class="team-group">
+
+          <h3 class="reveal">Secretaria municipal do trabalho, habitação e assistência social</h3>
+
+          <div class="team-grid">
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa1.png" alt="">
+              </div>
+              <h4>José Xavier</h4>
+              <div class="team-role">Secretário municipal</div>
+              <div class="team-time">2 anos de serviço</div>
+            </article>
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa1.png" alt="">
+              </div>
+              <h4>Nelson Pereira</h4>
+              <div class="team-role">Coordenador da proteção social básica</div>
+              <div class="team-time">2 anos de serviço</div>
+            </article>
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa1.png" alt="">
+              </div>
+              <h4>Monique</h4>
+              <div class="team-role">Coordenadora da proteção social especial</div>
+              <div class="team-time">2 anos de serviço</div>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- EQUIPE 2 -->
+
+        <div class="team-group">
+
+          <h3 class="reveal">Equipe Técnica - CRAS</h3>
+
+          <div class="team-grid">
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/cesar.png" alt="">
+              </div>
+              <h4>Cesar Santana</h4>
+              <div class="team-role">Técnico de nível superior - Psicólogo</div>
+              <div class="team-time">15 anos de serviço</div>
+            </article>
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa6.png" alt="">
+              </div>
+              <h4>Kátia Cilene</h4>
+              <div class="team-role">Técnica de nível superior - Assistente social</div>
+              <div class="team-time">3 anos de serviço</div>
+            </article>
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa7.png" alt="">
+              </div>
+              <h4>Kaliane Faria</h4>
+              <div class="team-role">Técnica de nível superior - Assistente social</div>
+              <div class="team-time">5 anos de serviço</div>
+            </article>
+
+            <!-- <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa8.png" alt="">
+              </div>
+              <h4>Marina Alves</h4>
+              <div class="team-role">Atendimento Familiar</div>
+              <div class="team-time">2 anos de serviço</div>
+            </article> -->
+
+          </div>
+        </div>
+
+        <!-- EQUIPE 3 -->
+
+        <div class="team-group">
+
+          <h3 class="reveal">Programa Criança Feliz</h3>
+
+          <div class="team-grid">
+		  
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa6.png" alt="">
+              </div>
+              <h4>Kátia Cilene</h4>
+              <div class="team-role">Supervisora</div>
+              <div class="team-time">15 anos de serviço</div>
+            </article>		  
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa9.png" alt="">
+              </div>
+              <h4>Edinete</h4>
+              <div class="team-role">Visitadora</div>
+              <div class="team-time">14 anos de serviço</div>
+            </article>
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa10.png" alt="">
+              </div>
+              <h4>Silvana Felinto</h4>
+              <div class="team-role">Visitadora</div>
+              <div class="team-time">6 anos de serviço</div>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- EQUIPE 4 -->
+
+        <div class="team-group">
+
+          <h3 class="reveal">Cadastro Único</h3>
+
+          <div class="team-grid">
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa1.png" alt="">
+              </div>
+              <h4>Gabriela</h4>
+              <div class="team-role">Gestora do CadÚnico</div>
+              <div class="team-time">2 anos de serviço</div>
+            </article>
+
+            <article class="team-card reveal">
+              <div class="team-photo">
+                <img src="images/pessoa1.png" alt="">
+              </div>
+              <h4>Taynara</h4>
+              <div class="team-role">Digitadora</div>
+              <div class="team-time">2 anos de serviço</div>
+            </article>
+
+          </div>
+        </div>
+
+     </section>
+
+    <!-- MURAL -->
+
+    <section id="avisos">
+      <div class="container">
+
+        <h2 class="section-title reveal">Mural de avisos</h2>
+
+        <p class="section-subtitle reveal">
+          Comunicados, eventos e informações institucionais atualizáveis.
+        </p>
+
+        <div class="posts-grid">
+          
+		  <!-- Inicio do post do mural -->
+		  
+          <article class="post-card reveal">
+            <div class="post-image">
+              <img src="images/post1.png" alt="">
+            </div>
+            <div class="post-content">
+              <span class="post-date">18 Maio 2026</span>
+              <h3>Título do post no mural</h3>
+              <p class="post-preview">
+                Famílias cadastradas devem comparecer ao CRAS para atualização cadastral obrigatória.
+              </p>
+              <div class="post-full">
+                O atendimento será realizado durante toda a semana mediante apresentação de documentos pessoais, comprovante de residência e documentos dos membros familiares.
+              </div>
+              <a href="#" class="post-btn">Entre em contato</a>
+            </div>
+          </article>
+          
+		  <!-- Término do post do mural -->
+		  
+		  <!-- Inicio do post do mural -->
+		  
+          <article class="post-card reveal">
+            <div class="post-content">
+              <span class="post-date">18 Maio de 2026</span>
+              <h3>Título do post no mural</h3>
+              <p class="post-preview">
+                Famílias cadastradas devem comparecer ao CRAS para atualização cadastral obrigatória.
+              </p>
+              <div class="post-full">
+                O atendimento será realizado durante toda a semana mediante apresentação de documentos pessoais, comprovante de residência e documentos dos membros familiares.
+              </div>
+              <a href="#" class="post-btn">Entre em contato</a>
+            </div>
+          </article>
+          
+		  <!-- Término do post do mural -->
+        
+		</div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+
+  <footer>
+    <div class="container">
+      CRAS “Irismar Wanderley da Costa” — Serra Negra do Norte / RN
+    </div>
+  </footer>
+
+  <!-- BOTAO INSTALAR PWA -->
+
+  <div class="install-banner" id="installBanner">
+    <button class="install-btn" id="installBtn">
+      Instalar aplicativo
+    </button>
+  </div>
+
+  <script>
+
+    // REVEAL ANIMATION
+
+    const reveals = document.querySelectorAll(".reveal");
+
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+        }
+      });
+    },{
+      threshold:0.15
+    });
+
+    reveals.forEach(el=>observer.observe(el));
+
+    // POSTS EXPAND
+
+    document.querySelectorAll(".post-card").forEach(card=>{
+      card.addEventListener("click", ()=>{
+        card.classList.toggle("active");
+      });
+    });
+
+    // PWA INSTALL
+
+    let deferredPrompt;
+
+    const installBanner = document.getElementById("installBanner");
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", (e)=>{
+      e.preventDefault();
+      deferredPrompt = e;
+      installBanner.style.display = "block";
+    });
+
+    installBtn.addEventListener("click", async ()=>{
+      if(deferredPrompt){
+        deferredPrompt.prompt();
+
+        const result = await deferredPrompt.userChoice;
+
+        if(result.outcome === "accepted"){
+          installBanner.style.display = "none";
+        }
+
+        deferredPrompt = null;
+      }
+    });
+
+    // MANIFEST INLINE
+
+    const manifest = {
+      name:"InfoCRAS",
+      short_name:"InfoCRAS",
+      start_url:".",
+      display:"standalone",
+      background_color:"#0a0a0f",
+      theme_color:"#0a0a0f",
+      icons:[
+        {
+          src:"images/logo.png",
+          sizes:"512x512",
+          type:"image/png"
+        }
+      ]
+    };
+
+    const blob = new Blob(
+      [JSON.stringify(manifest)],
+      {type:"application/json"}
+    );
+
+    const manifestURL = URL.createObjectURL(blob);
+
+    document
+      .querySelector("#manifest-placeholder")
+      .setAttribute("href", manifestURL);
+
+    // SERVICE WORKER INLINE
+
+    if("serviceWorker" in navigator){
+
+      const swCode = `
+        self.addEventListener('install', event => {
+          self.skipWaiting();
+        });
+
+        self.addEventListener('fetch', event => {});
+      `;
+
+      const swBlob = new Blob(
+        [swCode],
+        { type: 'text/javascript' }
+      );
+
+      const swURL = URL.createObjectURL(swBlob);
+
+      navigator.serviceWorker.register(swURL);
+
+    }
+
+  </script>
+
+</body>
+</html>
