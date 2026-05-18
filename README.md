@@ -1,3 +1,3 @@
 # infocras
 
-# Pagina institucional nao oficial.
+Pagina institucional nao oficial.
