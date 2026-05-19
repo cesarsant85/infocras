@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a0a0f" />
   <meta name="description" content="Portal institucional do CRAS Irismar Wanderley da Costa" />
-  <title>InfoCRAS | Serra Negra do Norte - RN</title>
+  <title>InfoCRAS | v.1.1(alpha)</title>
 
   <!-- PWA -->
   <link rel="manifest" id="manifest-placeholder" />
@@ -14,544 +14,954 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#0a0a0f;
-      --bg-soft:#111118;
-      --bg-card:#15151d;
-      --border:#232331;
-      --text:#f2f2f5;
-      --muted:#a3a3b2;
-      --accent:#1ea7ff;
-      --accent-soft:rgba(30,167,255,.12);
-      --shadow:0 20px 50px rgba(0,0,0,.45);
-      --radius:22px;
-      --container:1200px;
+
+    /* ============================================================
+       VARIÁVEIS GLOBAIS
+       — Para personalizar cores, altere os valores abaixo.
+       — --accent  → cor principal (links, botões, destaques)
+       — --bg      → cor de fundo geral
+       — --radius  → arredondamento dos cards
+    ============================================================ */
+    :root {
+      --bg:          #0a0a0f;
+      --bg-soft:     #111118;
+      --bg-card:     #15151d;
+      --border:      #232331;
+      --text:        #f2f2f5;
+      --muted:       #a3a3b2;
+      --accent:      #1ea7ff;
+      --accent-soft: rgba(30,167,255,.12);
+      --shadow:      0 20px 50px rgba(0,0,0,.45);
+      --radius:      22px;
+      --container:   1200px;
+
+      /* Duração da animação de troca de página.
+         Aumente para transições mais lentas, diminua para mais rápidas. */
+      --page-transition: 380ms;
     }
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
+    /* ============================================================
+       RESET E BASE
+    ============================================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    html{
-      scroll-behavior:smooth;
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Source Sans 3", sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+      /* Impede scroll na body — cada "página" ocupa 100vh */
+      overflow-y: hidden;
+      height: 100dvh;
     }
 
-    body{
-      background:var(--bg);
-      color:var(--text);
-      font-family:"Source Sans 3", sans-serif;
-      overflow-x:hidden;
-      line-height:1.6;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
+    /* Gradiente ambiente de fundo — decorativo */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
       background:
-      radial-gradient(circle at top right, rgba(30,167,255,.10), transparent 30%),
-      radial-gradient(circle at bottom left, rgba(30,167,255,.08), transparent 30%);
-      z-index:-1;
-      pointer-events:none;
+        radial-gradient(circle at top right,  rgba(30,167,255,.10), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(30,167,255,.08), transparent 30%);
+      z-index: -1;
+      pointer-events: none;
     }
 
-    h1,h2,h3,h4{
-      font-family:"Outfit", sans-serif;
-      letter-spacing:-0.03em;
+    h1, h2, h3, h4 {
+      font-family: "Outfit", sans-serif;
+      letter-spacing: -0.03em;
     }
 
-    img{
-      max-width:100%;
-      display:block;
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(100% - 2rem, var(--container));
+      margin-inline: auto;
     }
 
-    .container{
-      width:min(100% - 2rem, var(--container));
-      margin-inline:auto;
+    /* ============================================================
+       NAVBAR
+       — height fixo de 72px usado como offset em vários lugares.
+       — Para alterar, mude também --nav-h abaixo e o padding-top
+         das páginas internas.
+    ============================================================ */
+    :root { --nav-h: 72px; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: var(--nav-h);
+      z-index: 900;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      background: rgba(10,10,15,.60);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      display: flex;
+      align-items: center;
     }
 
-    section{
-      padding:100px 0;
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
     }
 
-    .section-title{
-      font-size:clamp(2rem,5vw,3rem);
-      margin-bottom:16px;
+    /* Marca / logotipo */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
     }
 
-    .section-subtitle{
-      color:var(--muted);
-      max-width:700px;
-      margin-bottom:40px;
-      font-size:1.05rem;
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.08);
     }
 
-    /* NAVBAR */
+    .brand h3 { font-size: 1.15rem; }
 
-    nav{
-      position:fixed;
-      top:0;
-      width:100%;
-      z-index:999;
-      backdrop-filter:blur(16px);
-      background:rgba(10,10,15,.55);
-      border-bottom:1px solid rgba(255,255,255,.04);
+    /* ============================================================
+       BREADCRUMB
+       — Mostra em qual seção o usuário está.
+       — Ficará oculto na página inicial (hero).
+       — Para ocultar em todas as páginas: display:none no .breadcrumb
+    ============================================================ */
+    .breadcrumb {
+      font-size: .82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: "Source Sans 3", sans-serif;
+      transition: opacity .3s;
     }
 
-    .nav-wrapper{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:16px 0;
+    .breadcrumb.hidden { opacity: 0; pointer-events: none; }
+
+    .breadcrumb-sep { opacity: .4; }
+
+    .breadcrumb-current {
+      color: var(--accent);
+      font-weight: 600;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
+    /* ============================================================
+       BOTÃO HAMBÚRGUER (canto superior direito)
+       — Três linhas que animam para X ao abrir o drawer.
+    ============================================================ */
+    .menu-toggle {
+      background: none;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 0;
+      transition: border-color .3s, background .3s;
+      flex-shrink: 0;
     }
 
-    .brand img{
-      width:48px;
-      height:48px;
-      border-radius:14px;
-      object-fit:cover;
-      border:1px solid rgba(255,255,255,.08);
+    .menu-toggle:hover {
+      border-color: rgba(30,167,255,.4);
+      background: var(--accent-soft);
     }
 
-    .brand h3{
-      font-size:1.2rem;
+    /* As três linhas do hambúrguer */
+    .menu-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform var(--page-transition) ease,
+                  opacity var(--page-transition) ease,
+                  width var(--page-transition) ease;
+      transform-origin: center;
     }
 
-    .nav-links{
-      display:flex;
-      gap:24px;
-      flex-wrap:wrap;
+    /* Animação para X quando drawer aberto */
+    .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-toggle.open span:nth-child(2) { opacity: 0; width: 0; }
+    .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ============================================================
+       DRAWER LATERAL (menu de navegação)
+       — Desliza da direita ao clicar no hambúrguer.
+       — Para alterar a largura máxima: mude --drawer-w abaixo.
+    ============================================================ */
+    :root { --drawer-w: 300px; }
+
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 800;
+      background: rgba(0,0,0,.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
 
-    .nav-links a{
-      text-decoration:none;
-      color:var(--muted);
-      transition:.3s;
-      font-weight:500;
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: all;
     }
 
-    .nav-links a:hover{
-      color:var(--text);
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(var(--drawer-w), 85vw);
+      z-index: 850;
+      background: var(--bg-soft);
+      border-left: 1px solid rgba(255,255,255,.06);
+      transform: translateX(100%);
+      transition: transform .38s cubic-bezier(.4,0,.2,1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
     }
 
-    /* HERO */
+    .drawer.open { transform: translateX(0); }
 
-    .hero{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      position:relative;
-      overflow:hidden;
+    .drawer-header {
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    .hero-grid{
-      display:grid;
-      grid-template-columns:1fr 420px;
-      gap:60px;
-      align-items:center;
+    .drawer-header img {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.08);
     }
 
-    .hero-content h1{
-      font-size:clamp(3rem,7vw,6rem);
-      line-height:.95;
-      margin-bottom:20px;
+    .drawer-header span {
+      font-family: "Outfit", sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
     }
 
-    .hero-content p{
-      color:var(--muted);
-      max-width:650px;
-      font-size:1.15rem;
-      margin-bottom:36px;
+    .drawer-nav {
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
     }
 
-    .hero-buttons{
-      display:flex;
-      flex-wrap:wrap;
-      gap:14px;
+    /* ============================================================
+       ITENS DO MENU NO DRAWER
+       — Cada item tem ícone SVG + rótulo + indicador de ativo.
+       — Para adicionar ou remover seções, veja também o JS abaixo
+         na seção "CONFIGURAÇÃO DAS PÁGINAS".
+    ============================================================ */
+    .drawer-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 500;
+      transition: background .25s, color .25s;
+      position: relative;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 1rem;
     }
 
-    .btn{
-      padding:14px 22px;
-      border-radius:16px;
-      text-decoration:none;
-      transition:.3s;
-      border:1px solid transparent;
-      font-weight:600;
+    .drawer-link:hover {
+      background: rgba(255,255,255,.04);
+      color: var(--text);
     }
 
-    .btn-primary{
-      background:var(--accent);
-      color:#fff;
+    /* Estado ativo do item de menu */
+    .drawer-link.active {
+      background: var(--accent-soft);
+      color: var(--accent);
     }
 
-    .btn-primary:hover{
-      transform:translateY(-2px);
-      box-shadow:0 12px 30px rgba(30,167,255,.25);
+    .drawer-link.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: var(--accent);
+      border-radius: 0 3px 3px 0;
     }
 
-    .btn-secondary{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.06);
-      color:var(--text);
+    .drawer-icon {
+      width: 20px;
+      height: 20px;
+      opacity: .7;
+      flex-shrink: 0;
     }
 
-    .btn-secondary:hover{
-      background:rgba(255,255,255,.08);
-      border-color:rgba(30,167,255,.35);
+    .drawer-link.active .drawer-icon { opacity: 1; }
+
+    .drawer-footer {
+      padding: 16px 24px;
+      border-top: 1px solid rgba(255,255,255,.05);
+      font-size: .82rem;
+      color: var(--muted);
+      text-align: center;
     }
 
-    .hero-card{
-      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:32px;
-      padding:40px;
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
+    /* ============================================================
+       SISTEMA DE PÁGINAS
+       — Cada section.page representa uma "tela" independente.
+       — Apenas a página com [data-page="active"] é visível.
+       — As transições usam classes .page-enter e .page-exit.
+    ============================================================ */
+    .page {
+      position: fixed;
+      inset: 0;
+      top: var(--nav-h);
+      overflow-y: auto;
+      overflow-x: hidden;
+      opacity: 0;
+      pointer-events: none;
+      /* Transição de entrada: fade + leve deslize vertical */
+      transform: translateY(12px);
+      transition:
+        opacity var(--page-transition) ease,
+        transform var(--page-transition) ease;
+      /* Esconde páginas inativas de leitores de tela */
+      visibility: hidden;
     }
 
-    .hero-card::before{
-      content:"";
-      position:absolute;
-      width:220px;
-      height:220px;
-      background:rgba(30,167,255,.12);
-      border-radius:50%;
-      top:-70px;
-      right:-70px;
-      filter:blur(30px);
+    .page[data-page="active"] {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+      visibility: visible;
     }
 
-    .hero-card img{
-      width:110px;
-      margin-bottom:24px;
+    /* ============================================================
+       HERO (página inicial)
+    ============================================================ */
+    .hero {
+      min-height: calc(100dvh - var(--nav-h));
+      display: flex;
+      align-items: center;
+      padding: 60px 0;
     }
 
-    .hero-card h3{
-      margin-bottom:14px;
-      font-size:1.7rem;
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 60px;
+      align-items: center;
     }
 
-    .hero-card p{
-      color:var(--muted);
+    .hero-content h1 {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: .95;
+      margin-bottom: 20px;
     }
 
-    /* INSTALL BUTTON */
-
-    .install-banner{
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      z-index:9999;
-      display:none;
+    .hero-content p {
+      color: var(--muted);
+      max-width: 580px;
+      font-size: 1.1rem;
+      margin-bottom: 36px;
     }
 
-    .install-btn{
-      background:var(--accent);
-      border:none;
-      color:#fff;
-      padding:14px 18px;
-      border-radius:16px;
-      font-weight:600;
-      cursor:pointer;
-      box-shadow:0 12px 30px rgba(30,167,255,.25);
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    /* GENERIC CARD */
+    /* ============================================================
+       BOTÕES GERAIS
+       — .btn-primary  → fundo azul (ação principal)
+       — .btn-secondary → fundo sutil (ações secundárias)
+    ============================================================ */
+    .btn {
+      padding: 13px 20px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: transform .25s, box-shadow .25s, background .25s, border-color .25s;
+      border: 1px solid transparent;
+      font-weight: 600;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: .95rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(30,167,255,.28);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,.08);
+      border-color: rgba(30,167,255,.35);
+    }
+
+    /* Card flutuante do hero */
+    .hero-card {
+      background: linear-gradient(160deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      background: rgba(30,167,255,.13);
+      border-radius: 50%;
+      top: -80px;
+      right: -80px;
+      filter: blur(35px);
+      pointer-events: none;
+    }
+
+    .hero-card img {
+      width: 100px;
+      margin-bottom: 24px;
+    }
+
+    .hero-card h3 {
+      margin-bottom: 14px;
+      font-size: 1.6rem;
+    }
+
+    .hero-card p { color: var(--muted); }
+
+    /* ============================================================
+       PÁGINAS INTERNAS — layout padrão
+    ============================================================ */
+    .page-inner {
+      padding: 60px 0 80px;
+    }
+
+    /* Cabeçalho de seção com ícone */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-icon {
+      width: 46px;
+      height: 46px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(30,167,255,.2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      max-width: 680px;
+      margin-bottom: 40px;
+      font-size: 1.05rem;
+      /* Indenta o subtítulo alinhado ao título (ícone + gap) */
+      padding-left: 62px;
+    }
+
+    /* ============================================================
+       QUEM SOMOS
+    ============================================================ */
+    .about-box {
+      background: linear-gradient(160deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border: 1px solid rgba(255,255,255,.06);
+      padding: 40px;
+      border-radius: 28px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.75;
+    }
+
+    /* ============================================================
+       CARDS GENÉRICOS
+       — Usados no mural e em WhatsApp.
+       — Para alterar dimensões de todos os cards:
+           .card { min-height: SEU_VALOR; }
+    ============================================================ */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(30,167,255,.3);
+      box-shadow: 0 18px 38px rgba(0,0,0,.3);
+    }
+
+    /* ============================================================
+       WHATSAPP
+    ============================================================ */
+    .grid { display: grid; gap: 22px; }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+
+    .whatsapp-card h3 { margin-bottom: 8px; font-size: 1.05rem; }
+
+    .whatsapp-card p {
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-size: .95rem;
+    }
+
+    /* Ícone do WhatsApp inline nos cards */
+    .whatsapp-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #25d366;
+      font-weight: 600;
+      font-size: .95rem;
+      transition: opacity .2s;
+    }
+
+    .whatsapp-link:hover { opacity: .8; }
+
+    .whatsapp-link svg {
+      width: 18px;
+      height: 18px;
+      fill: #25d366;
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       HORÁRIOS
+    ============================================================ */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .schedule-day {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      transition: border-color .3s;
+    }
+
+    .schedule-day:hover { border-color: rgba(30,167,255,.25); }
+
+    .schedule-day h3 {
+      margin-bottom: 14px;
+      font-size: 1.05rem;
+      color: var(--accent);
+    }
+
+    .schedule-day ul { list-style: none; color: var(--muted); }
+
+    .schedule-day li {
+      margin-bottom: 8px;
+      font-size: .93rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    /* Bolinha separadora nos itens de horário */
+    .schedule-day li::before {
+      content: "·";
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1.2;
+      flex-shrink: 0;
+    }
+
+    /* Linha de horário em destaque */
+    .schedule-day li:nth-child(-n+2) {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .schedule-day li:nth-child(-n+2)::before { opacity: 0; }
+
+    /* ============================================================
+       EQUIPE
+    ============================================================ */
+    .team-group { margin-bottom: 60px; }
+
+    .team-group-title {
+      font-size: 1.5rem;
+      margin-bottom: 22px;
+      color: var(--text);
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
 
     /*
-      ALTERE A LARGURA E ALTURA DOS CARDS AQUI
-      width: ;
-      min-height: ;
+      CARDS DA EQUIPE
+      — Para alterar tamanho: ajuste min-height e padding.
     */
-
-    .card{
-      background:var(--bg-card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:28px;
-      transition:.35s;
-      position:relative;
-      overflow:hidden;
-      width:100%;
-      min-height:220px;
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .3s, border-color .3s;
+      min-height: 220px;
     }
 
-    .card:hover{
-      transform:translateY(-6px);
-      border-color:rgba(30,167,255,.3);
-      box-shadow:0 20px 40px rgba(0,0,0,.35);
+    .team-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(30,167,255,.3);
     }
 
-    /* ABOUT */
-
-    .about-box{
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
-      border:1px solid rgba(255,255,255,.06);
-      padding:40px;
-      border-radius:32px;
-      color:var(--muted);
-      font-size:1.1rem;
+    .team-photo {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,.08);
+      margin-bottom: 16px;
     }
 
-    /* WHATSAPP */
-
-    .grid{
-      display:grid;
-      gap:24px;
+    .team-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    .grid-4{
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    .team-card h4 { font-size: 1rem; }
+
+    .team-role {
+      color: var(--accent);
+      margin-top: 5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: .9rem;
     }
 
-    .whatsapp-card h3{
-      margin-bottom:8px;
+    .team-time { color: var(--muted); font-size: .88rem; }
+
+    /* ============================================================
+       MURAL DE AVISOS
+       — Post com imagem (opcional) + texto expansível.
+       — Clique no card para expandir o texto completo.
+       — Para alterar altura da imagem: .post-image { height: SEU_VALOR; }
+    ============================================================ */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 22px;
     }
 
-    .whatsapp-card p{
-      color:var(--muted);
-      margin-bottom:18px;
+    .post-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .3s, border-color .3s;
     }
 
-    .whatsapp-link{
-      text-decoration:none;
-      color:var(--accent);
-      font-weight:600;
+    .post-card:hover { transform: translateY(-5px); border-color: rgba(30,167,255,.3); }
+
+    .post-image {
+      height: 200px;
+      background: #1a1a24;
+      overflow: hidden;
     }
 
-    /* HORARIOS */
-
-    .schedule-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:22px;
+    .post-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .4s ease;
     }
 
-    .schedule-day{
-      background:var(--bg-card);
-      border:1px solid var(--border);
-      border-radius:24px;
-      padding:24px;
+    .post-card:hover .post-image img { transform: scale(1.04); }
+
+    .post-content { padding: 24px; }
+
+    .post-content h3 { margin-bottom: 8px; font-size: 1.05rem; }
+
+    .post-date {
+      color: var(--accent);
+      font-size: .86rem;
+      margin-bottom: 10px;
+      display: block;
     }
 
-    .schedule-day h3{
-      margin-bottom:14px;
+    .post-preview {
+      color: var(--muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: .95rem;
     }
 
-    .schedule-day ul{
-      list-style:none;
-      color:var(--muted);
+    .post-full {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+      color: var(--muted);
+      margin-top: 10px;
+      font-size: .95rem;
     }
 
-    .schedule-day li{
-      margin-bottom:10px;
+    .post-card.active .post-full { max-height: 500px; }
+
+    /* Indicador visual "clique para expandir" */
+    .post-expand-hint {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: .82rem;
+      transition: color .2s;
     }
 
-    /* TEAM */
-
-    .team-group{
-      margin-bottom:70px;
+    .post-expand-hint svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      transition: transform .3s;
     }
 
-    .team-group h3{
-      margin-bottom:24px;
-      font-size:1.8rem;
+    .post-card.active .post-expand-hint svg { transform: rotate(180deg); }
+    .post-card.active .post-expand-hint { color: var(--accent); }
+
+    .post-btn {
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #fff;
+      background: var(--accent);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: .9rem;
+      transition: transform .2s, box-shadow .2s;
     }
 
-    .team-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-      gap:24px;
+    .post-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(30,167,255,.25);
     }
 
-    /*
-      ALTERE A ALTURA E LARGURA DOS CARDS DA EQUIPE AQUI
-      width: ;
-      min-height: ;
-    */
-
-    .team-card{
-      background:var(--bg-card);
-      border:1px solid var(--border);
-      border-radius:28px;
-      padding:28px;
-      position:relative;
-      overflow:hidden;
-      transition:.35s;
-      min-height:260px;
+    /* ============================================================
+       BOTÃO "INÍCIO" — fixo no canto inferior direito
+       — Aparece em todas as páginas exceto na home.
+       — Para mover: ajuste bottom e right.
+       — Para ocultar permanentemente: display:none !important
+    ============================================================ */
+    .btn-home {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 700;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,.09);
+      color: var(--text);
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      transition:
+        opacity .3s, transform .3s,
+        background .25s, border-color .25s;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
     }
 
-    .team-card:hover{
-      transform:translateY(-6px);
-      border-color:rgba(30,167,255,.3);
+    .btn-home.visible {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
     }
 
-    .team-photo{
-      width:78px;
-      height:78px;
-      border-radius:50%;
-      overflow:hidden;
-      border:2px solid rgba(255,255,255,.08);
-      margin-bottom:18px;
+    .btn-home:hover {
+      background: var(--accent-soft);
+      border-color: rgba(30,167,255,.35);
     }
 
-    .team-photo img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .btn-home svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    .team-role{
-      color:var(--accent);
-      margin-top:6px;
-      margin-bottom:10px;
-      font-weight:600;
+    /* ============================================================
+       BOTÃO INSTALAR PWA
+       — Posicionado acima do botão "Início" para não sobrepor.
+    ============================================================ */
+    .install-banner {
+      position: fixed;
+      bottom: 80px;
+      right: 24px;
+      z-index: 700;
+      display: none;
     }
 
-    .team-time{
-      color:var(--muted);
-      font-size:.95rem;
+    .install-btn {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 10px 28px rgba(30,167,255,.25);
+      font-family: "Source Sans 3", sans-serif;
+      font-size: .9rem;
     }
 
-    /* POSTS */
-
-    .posts-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-      gap:24px;
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      border-top: 1px solid rgba(255,255,255,.05);
+      padding: 32px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: .9rem;
     }
 
-    /*
-      ALTERE A ALTURA E LARGURA DOS CARDS DO MURAL AQUI
-      width: ;
-      min-height: ;
-    */
-
-    .post-card{
-      background:var(--bg-card);
-      border:1px solid var(--border);
-      border-radius:28px;
-      overflow:hidden;
-      cursor:pointer;
-      transition:.35s;
-      min-height:450px;
+    /* ============================================================
+       ANIMAÇÃO DE REVEAL (para conteúdo interno das páginas)
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
     }
 
-    .post-card:hover{
-      transform:translateY(-6px);
-      border-color:rgba(30,167,255,.35);
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    .post-image{
-      height:220px;
-      background:#1a1a24;
-      overflow:hidden;
-    }
-
-    .post-image img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
-
-    .post-content{
-      padding:24px;
-    }
-
-    .post-content h3{
-      margin-bottom:10px;
-    }
-
-    .post-date{
-      color:var(--accent);
-      font-size:.92rem;
-      margin-bottom:12px;
-      display:block;
-    }
-
-    .post-preview{
-      color:var(--muted);
-      display:-webkit-box;
-      -webkit-line-clamp:3;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
-    }
-
-    .post-full{
-      max-height:0;
-      overflow:hidden;
-      transition:max-height .4s ease;
-      color:var(--muted);
-      margin-top:12px;
-    }
-
-    .post-card.active .post-full{
-      max-height:500px;
-    }
-
-    .post-btn{
-      margin-top:18px;
-      display:inline-flex;
-      text-decoration:none;
-      color:#fff;
-      background:var(--accent);
-      padding:10px 16px;
-      border-radius:12px;
-      font-weight:600;
-    }
-
-    /* FOOTER */
-
-    footer{
-      border-top:1px solid rgba(255,255,255,.06);
-      padding:40px 0;
-      text-align:center;
-      color:var(--muted);
-    }
-
-    /* ANIMATION */
-
-    .reveal{
-      opacity:0;
-      transform:translateY(40px);
-      transition:1s ease;
-    }
-
-    .reveal.visible{
-      opacity:1;
-      transform:translateY(0);
-    }
-
-    @media(max-width:980px){
-
-      .hero-grid{
-        grid-template-columns:1fr;
+    /* ============================================================
+       RESPONSIVIDADE
+    ============================================================ */
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
       }
 
-      .hero{
-        padding-top:120px;
+      .hero {
+        padding: 40px 0 60px;
       }
 
-      .nav-links{
-        display:none;
+      .hero-card { display: none; } /* Opcional: oculta card no mobile */
+
+      .section-subtitle { padding-left: 0; }
+    }
+
+    @media (max-width: 560px) {
+      .schedule-grid {
+        grid-template-columns: 1fr;
       }
 
-      section{
-        padding:80px 0;
-      }
+      .hero-content h1 { font-size: 2.8rem; }
     }
 
   </style>
@@ -559,76 +969,187 @@
 
 <body>
 
-  <!-- NAVBAR -->
-
+  <!-- ============================================================
+       NAVBAR
+       — .brand redireciona para a home ao ser clicado (ver JS).
+       — .menu-toggle abre/fecha o drawer lateral.
+  ============================================================ -->
   <nav>
     <div class="container nav-wrapper">
-      <div class="brand">
+
+      <!-- Logo + nome — clicável para voltar à home -->
+      <a class="brand" id="brandLink" href="#" aria-label="Voltar ao início">
         <img src="images/logo.png" alt="Logo CRAS">
         <div>
           <h3>InfoCRAS</h3>
         </div>
+      </a>
+
+      <!-- Breadcrumb: mostra a seção atual -->
+      <div class="breadcrumb hidden" id="breadcrumb" aria-live="polite">
+        <span class="breadcrumb-sep">InfoCRAS</span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current" id="breadcrumbLabel"></span>
       </div>
 
-      <div class="nav-links">
-        <a href="#quem-somos">Quem somos</a>
-        <a href="#whatsapp">WhatsApp</a>
-        <a href="#horarios">Horários</a>
-        <a href="#equipe">Equipe</a>
-        <a href="#avisos">Mural</a>
-      </div>
+      <!-- Hambúrguer -->
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- ============================================================
+       DRAWER LATERAL
+  ============================================================ -->
+  <div class="drawer-overlay" id="drawerOverlay" role="presentation"></div>
 
-  <main>
+  <aside class="drawer" id="drawer" role="dialog" aria-label="Menu de navegação" aria-modal="true">
 
-    <section class="hero">
+    <div class="drawer-header">
+      <img src="images/logo.png" alt="Logo CRAS">
+      <span>InfoCRAS</span>
+    </div>
+
+    <nav class="drawer-nav" aria-label="Seções do portal">
+
+      <!-- ============================================================
+           ITENS DO MENU
+           — data-target deve corresponder ao id da .page desejada.
+           — Para adicionar uma nova seção: copie um <button> e
+             crie o <section class="page" id="nova-secao"> no HTML.
+      ============================================================ -->
+
+      <button class="drawer-link active" data-target="hero" aria-current="page">
+        <!-- Ícone: casa -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+          <path d="M9 21V12h6v9"/>
+        </svg>
+        Início
+      </button>
+
+      <button class="drawer-link" data-target="quem-somos">
+        <!-- Ícone: informação -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Quem somos
+      </button>
+
+      <button class="drawer-link" data-target="whatsapp">
+        <!-- Ícone: mensagem -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        WhatsApp
+      </button>
+
+      <button class="drawer-link" data-target="horarios">
+        <!-- Ícone: relógio -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="12 7 12 12 15 15"/>
+        </svg>
+        Horários
+      </button>
+
+      <button class="drawer-link" data-target="equipe">
+        <!-- Ícone: grupo -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+          <path d="M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        Equipe
+      </button>
+
+      <button class="drawer-link" data-target="avisos">
+        <!-- Ícone: megafone -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8a6 6 0 010 8"/>
+          <path d="M14.5 11.5a2 2 0 010 1"/>
+          <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+        </svg>
+        Mural de avisos
+      </button>
+
+    </nav>
+
+
+
+  </aside>
+
+  <!-- ============================================================
+       PÁGINAS
+       — Cada section.page é uma tela independente.
+       — Apenas a ativa fica visível (gerenciado pelo JS).
+  ============================================================ -->
+
+  <!-- PÁGINA: HERO / INÍCIO -->
+  <section class="page" id="hero" data-page="active" data-label="Início">
+    <div class="hero">
       <div class="container hero-grid">
 
         <div class="hero-content reveal">
           <h1>InfoCRAS</h1>
-
           <p>
-            Portal de comunicação e informações do Centro de Referência da Assistência Social de Serra Negra do Norte – RN.
-            Informações institucionais, equipe, horários de funcionamento e comunicação direta em um único ambiente.
+            Portal de comunicação e informações do Centro de Referência da Assistência Social
+            de Serra Negra do Norte – RN. Informações institucionais, equipe, horários de
+            funcionamento e comunicação direta em um único ambiente.
           </p>
 
           <div class="hero-buttons">
-            <a href="#quem-somos" class="btn btn-primary">Quem somos</a>
-            <a href="#whatsapp" class="btn btn-secondary">WhatsApp</a>
-            <a href="#horarios" class="btn btn-secondary">Horários de funcionamento</a>
-            <a href="#equipe" class="btn btn-secondary">Equipe</a>
-            <a href="#avisos" class="btn btn-secondary">Mural de avisos</a>
+            <!-- Cada botão usa data-target para navegar entre páginas -->
+            <button class="btn btn-primary" data-nav="quem-somos">Quem somos</button>
+            <button class="btn btn-secondary" data-nav="whatsapp">WhatsApp</button>
+            <button class="btn btn-secondary" data-nav="horarios">Horários</button>
+            <button class="btn btn-secondary" data-nav="equipe">Equipe</button>
+            <button class="btn btn-secondary" data-nav="avisos">Mural de avisos</button>
           </div>
         </div>
 
         <div class="hero-card reveal">
-          <img src="images/logo.png" alt="Logo">
-
-          <h3>CRAS “Irismar Wanderley da Costa”</h3>
-
+          <img src="images/logo.png" alt="Logo CRAS">
+          <h3>CRAS "Irismar Wanderley da Costa"</h3>
           <p>
             Serra Negra do Norte – Rio Grande do Norte.
-            Plataforma institucional responsiva desenvolvida para acesso rápido a informações, equipe técnica e comunicados oficiais.
+            Plataforma institucional responsiva desenvolvida para acesso rápido a
+            informações, equipe técnica e comunicados oficiais.
           </p>
         </div>
 
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- QUEM SOMOS -->
-
-    <section id="quem-somos">
+  <!-- PÁGINA: QUEM SOMOS -->
+  <section class="page" id="quem-somos" data-label="Quem somos">
+    <div class="page-inner">
       <div class="container">
 
-        <h2 class="section-title reveal">Quem somos</h2>
+        <div class="section-head reveal">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <h2 class="section-title">Quem somos</h2>
+        </div>
 
         <p class="section-subtitle reveal">
           Espaço institucional destinado à apresentação do CRAS e suas atividades.
         </p>
 
+        <!-- ============================================================
+             TEXTO INSTITUCIONAL
+             — Substitua o conteúdo abaixo pelo texto real do CRAS.
+             — Pode incluir parágrafos, listas, etc.
+        ============================================================ -->
         <div class="about-box reveal">
           INSIRA AQUI O TEXTO INSTITUCIONAL DO CRAS.
           <br><br>
@@ -638,14 +1159,20 @@
         </div>
 
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- WHATSAPP -->
-
-    <section id="whatsapp">
+  <!-- PÁGINA: WHATSAPP -->
+  <section class="page" id="whatsapp" data-label="WhatsApp">
+    <div class="page-inner">
       <div class="container">
 
-        <h2 class="section-title reveal">Canais de WhatsApp</h2>
+        <div class="section-head reveal">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <h2 class="section-title">Contatos via WhatsApp</h2>
+        </div>
 
         <p class="section-subtitle reveal">
           Comunicação direta com setores e profissionais da assistência social.
@@ -653,59 +1180,98 @@
 
         <div class="grid grid-4">
 
+          <!-- ============================================================
+               CARDS DE WHATSAPP
+               — Substitua o href="#" pelo link real do WhatsApp.
+               — Formato: https://wa.me/55XXXXXXXXXXX
+               — Adicione ou remova <article> conforme necessário.
+          ============================================================ -->
+
           <article class="card whatsapp-card reveal">
-            <h3>Jose Xavier</h3>
-            <p>Secretário municipal do trabalho, habitação e assistencia social</p>
-            <a href="#" class="whatsapp-link">Entrar em contato</a>
+            <h3>Secretaria Municipal do Trabalho, Habitação e Assistência Social</h3>
+            <p>Jose Xavier - Secretário - Contato institucional</p>
+            <a href="https://wa.me/55998188143" class="whatsapp-link">
+              <!-- Ícone SVG do WhatsApp -->
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.475 2 2 6.477 2 11.993c0 1.76.46 3.41 1.27 4.85L2 22l5.29-1.247A9.953 9.953 0 0011.99 22C17.515 22 22 17.524 22 12.007 22 6.479 17.515 2 11.99 2zm.01 18.2a8.181 8.181 0 01-4.17-1.145l-.3-.178-3.1.731.775-2.997-.197-.31A8.188 8.188 0 013.8 12.007C3.8 7.47 7.46 3.8 12 3.8c4.538 0 8.2 3.671 8.2 8.207 0 4.536-3.662 8.193-8.2 8.193z"/></svg>
+              Entrar em contato
+            </a>
           </article>
 
           <article class="card whatsapp-card reveal">
             <h3>CRAS "Irismar Wanderley da Costa"</h3>
             <p>Contato institucional</p>
-            <a href="#" class="whatsapp-link">Entrar em contato</a>
+            <a href="https://wa.me/55998810875" class="whatsapp-link">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.475 2 2 6.477 2 11.993c0 1.76.46 3.41 1.27 4.85L2 22l5.29-1.247A9.953 9.953 0 0011.99 22C17.515 22 22 17.524 22 12.007 22 6.479 17.515 2 11.99 2zm.01 18.2a8.181 8.181 0 01-4.17-1.145l-.3-.178-3.1.731.775-2.997-.197-.31A8.188 8.188 0 013.8 12.007C3.8 7.47 7.46 3.8 12 3.8c4.538 0 8.2 3.671 8.2 8.207 0 4.536-3.662 8.193-8.2 8.193z"/></svg>
+              Entrar em contato
+            </a>
           </article>
 
           <article class="card whatsapp-card reveal">
-            <h3>Setor do Cadastro Unico para Programas Sociais</h3>
-            <p>Atendimento Psicossocial</p>
-            <a href="#" class="whatsapp-link">Entrar em contato</a>
+            <h3>Setor do Cadastro Único</h3>
+            <p>Cadastro Único para Programas Sociais</p>
+            <a href="https://wa.me/55998810876" class="whatsapp-link">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.475 2 2 6.477 2 11.993c0 1.76.46 3.41 1.27 4.85L2 22l5.29-1.247A9.953 9.953 0 0011.99 22C17.515 22 22 17.524 22 12.007 22 6.479 17.515 2 11.99 2zm.01 18.2a8.181 8.181 0 01-4.17-1.145l-.3-.178-3.1.731.775-2.997-.197-.31A8.188 8.188 0 013.8 12.007C3.8 7.47 7.46 3.8 12 3.8c4.538 0 8.2 3.671 8.2 8.207 0 4.536-3.662 8.193-8.2 8.193z"/></svg>
+              Entrar em contato
+            </a>
           </article>
 
           <article class="card whatsapp-card reveal">
-            <h3>CREAS - Centro de Referência Especial da Assitencia Social</h3>
-            <p>Contato institucional</p>
-            <a href="#" class="whatsapp-link">Entrar em contato</a>
+            <h3>CREAS</h3>
+            <p>Centro de Referência Especializado da Assistência Social</p>
+            <a href="https://wa.me/55998810878" class="whatsapp-link">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.475 2 2 6.477 2 11.993c0 1.76.46 3.41 1.27 4.85L2 22l5.29-1.247A9.953 9.953 0 0011.99 22C17.515 22 22 17.524 22 12.007 22 6.479 17.515 2 11.99 2zm.01 18.2a8.181 8.181 0 01-4.17-1.145l-.3-.178-3.1.731.775-2.997-.197-.31A8.188 8.188 0 013.8 12.007C3.8 7.47 7.46 3.8 12 3.8c4.538 0 8.2 3.671 8.2 8.207 0 4.536-3.662 8.193-8.2 8.193z"/></svg>
+              Entrar em contato
+            </a>
           </article>
 
           <article class="card whatsapp-card reveal">
             <h3>Conselho Tutelar</h3>
             <p>Contato institucional</p>
-            <a href="#" class="whatsapp-link">Entrar em contato</a>
+            <a href="https://wa.me/55998810881" class="whatsapp-link">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.475 2 2 6.477 2 11.993c0 1.76.46 3.41 1.27 4.85L2 22l5.29-1.247A9.953 9.953 0 0011.99 22C17.515 22 22 17.524 22 12.007 22 6.479 17.515 2 11.99 2zm.01 18.2a8.181 8.181 0 01-4.17-1.145l-.3-.178-3.1.731.775-2.997-.197-.31A8.188 8.188 0 013.8 12.007C3.8 7.47 7.46 3.8 12 3.8c4.538 0 8.2 3.671 8.2 8.207 0 4.536-3.662 8.193-8.2 8.193z"/></svg>
+              Entrar em contato
+            </a>
           </article>
 
-          <article class="card whatsapp-card reveal">
+          <!-- <article class="card whatsapp-card reveal">
             <h3>Carlos Henrique</h3>
             <p>Atendimento Psicossocial</p>
-            <a href="#" class="whatsapp-link">Entrar em contato</a>
-          </article>
+            <a href="#" class="whatsapp-link">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.99 2C6.475 2 2 6.477 2 11.993c0 1.76.46 3.41 1.27 4.85L2 22l5.29-1.247A9.953 9.953 0 0011.99 22C17.515 22 22 17.524 22 12.007 22 6.479 17.515 2 11.99 2zm.01 18.2a8.181 8.181 0 01-4.17-1.145l-.3-.178-3.1.731.775-2.997-.197-.31A8.188 8.188 0 013.8 12.007C3.8 7.47 7.46 3.8 12 3.8c4.538 0 8.2 3.671 8.2 8.207 0 4.536-3.662 8.193-8.2 8.193z"/></svg>
+              Entrar em contato
+            </a>
+          </article> -->
 
         </div>
 
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- HORARIOS -->
-
-    <section id="horarios">
+  <!-- PÁGINA: HORÁRIOS -->
+  <section class="page" id="horarios" data-label="Horários">
+    <div class="page-inner">
       <div class="container">
 
-        <h2 class="section-title reveal">Horários de funcionamento</h2>
+        <div class="section-head reveal">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+          </div>
+          <h2 class="section-title">Horários de funcionamento</h2>
+        </div>
 
         <p class="section-subtitle reveal">
           Organização semanal dos horários e profissionais em expediente.
         </p>
 
         <div class="schedule-grid">
+
+          <!-- ============================================================
+               DIAS DA SEMANA
+               — Para alterar horários ou profissionais de um dia,
+                 edite os <li> dentro do <ul> correspondente.
+               — Para adicionar um dia, copie todo o bloco .schedule-day.
+          ============================================================ -->
 
           <div class="schedule-day reveal">
             <h3>Segunda-feira</h3>
@@ -714,7 +1280,7 @@
               <li>Tarde: 13:00 às 17:00</li>
               <li>Nelson Pereira — Coordenador</li>
               <li>Cesar Santana — Psicólogo</li>
-			  <li>Kátia Cilene — Assistente social</li>
+              <li>Kátia Cilene — Assistente social</li>
               <li>Gabriela — Cadastro único</li>
               <li>Taynara — Cadastro único</li>
             </ul>
@@ -739,8 +1305,8 @@
               <li>Tarde: 13:00 às 17:00</li>
               <li>Nelson Pereira — Coordenador</li>
               <li>Cesar Santana — Psicólogo</li>
-			  <li>Kátia Cilene — Assistente social</li>
-			  <li>Kaliane Faria — Assistente social</li>
+              <li>Kátia Cilene — Assistente social</li>
+              <li>Kaliane Faria — Assistente social</li>
               <li>Gabriela — Cadastro único</li>
               <li>Taynara — Cadastro único</li>
             </ul>
@@ -752,7 +1318,7 @@
               <li>Manhã: 07:00 às 11:00</li>
               <li>Tarde: 13:00 às 17:00</li>
               <li>Nelson Pereira — Coordenador</li>
-			  <li>Kaliane Faria — Assistente social</li>
+              <li>Kaliane Faria — Assistente social</li>
               <li>Gabriela — Cadastro único</li>
               <li>Taynara — Cadastro único</li>
             </ul>
@@ -763,9 +1329,9 @@
             <ul>
               <li>Manhã: 07:00 às 11:00</li>
               <li>Tarde: 13:00 às 17:00</li>
-			  <li>Nelson Pereira — Coordenador</li>
-			  <li>Kátia Cilene — Assistente social</li>
-			  <li>Kaliane Faria — Assistente social</li>
+              <li>Nelson Pereira — Coordenador</li>
+              <li>Kátia Cilene — Assistente social</li>
+              <li>Kaliane Faria — Assistente social</li>
               <li>Gabriela — Cadastro único</li>
               <li>Taynara — Cadastro único</li>
             </ul>
@@ -774,49 +1340,54 @@
         </div>
 
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- EQUIPE -->
-
-    <section id="equipe">
+  <!-- PÁGINA: EQUIPE -->
+  <section class="page" id="equipe" data-label="Equipe">
+    <div class="page-inner">
       <div class="container">
 
-        <h2 class="section-title reveal">Equipe</h2>
+        <div class="section-head reveal">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h2 class="section-title">Equipe</h2>
+        </div>
 
         <p class="section-subtitle reveal">
           Estrutura organizacional dividida por equipes e setores.
         </p>
 
-        <!-- EQUIPE 1 -->
-
+        <!-- GRUPO 1 -->
         <div class="team-group">
-
-          <h3 class="reveal">Secretaria municipal do trabalho, habitação e assistência social</h3>
-
+          <h3 class="team-group-title reveal">Secretaria municipal do trabalho, habitação e assistência social</h3>
           <div class="team-grid">
 
+            <!-- ============================================================
+                 CARDS DE EQUIPE
+                 — Para alterar foto: mude o src da <img>.
+                 — Imagens sugeridas: 200×200 px, formato .png ou .webp.
+                 — Para ocultar um membro temporariamente: adicione
+                   style="display:none" ao <article>.
+            ============================================================ -->
+
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa1.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa1.png" alt="Foto de José Xavier"></div>
               <h4>José Xavier</h4>
               <div class="team-role">Secretário municipal</div>
               <div class="team-time">2 anos de serviço</div>
             </article>
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa1.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa1.png" alt="Foto de Nelson Pereira"></div>
               <h4>Nelson Pereira</h4>
               <div class="team-role">Coordenador da proteção social básica</div>
               <div class="team-time">2 anos de serviço</div>
             </article>
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa1.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa1.png" alt="Foto de Monique"></div>
               <h4>Monique</h4>
               <div class="team-role">Coordenadora da proteção social especial</div>
               <div class="team-time">2 anos de serviço</div>
@@ -825,83 +1396,56 @@
           </div>
         </div>
 
-        <!-- EQUIPE 2 -->
-
+        <!-- GRUPO 2 -->
         <div class="team-group">
-
-          <h3 class="reveal">Equipe Técnica - CRAS</h3>
-
+          <h3 class="team-group-title reveal">Equipe Técnica — CRAS</h3>
           <div class="team-grid">
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/cesar.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/cesar.png" alt="Foto de Cesar Santana"></div>
               <h4>Cesar Santana</h4>
-              <div class="team-role">Técnico de nível superior - Psicólogo</div>
+              <div class="team-role">Técnico de nível superior — Psicólogo</div>
               <div class="team-time">15 anos de serviço</div>
             </article>
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa6.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa6.png" alt="Foto de Kátia Cilene"></div>
               <h4>Kátia Cilene</h4>
-              <div class="team-role">Técnica de nível superior - Assistente social</div>
+              <div class="team-role">Técnica de nível superior — Assistente social</div>
               <div class="team-time">3 anos de serviço</div>
             </article>
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa7.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa7.png" alt="Foto de Kaliane Faria"></div>
               <h4>Kaliane Faria</h4>
-              <div class="team-role">Técnica de nível superior - Assistente social</div>
+              <div class="team-role">Técnica de nível superior — Assistente social</div>
               <div class="team-time">5 anos de serviço</div>
             </article>
-
-            <!-- <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa8.png" alt="">
-              </div>
-              <h4>Marina Alves</h4>
-              <div class="team-role">Atendimento Familiar</div>
-              <div class="team-time">2 anos de serviço</div>
-            </article> -->
 
           </div>
         </div>
 
-        <!-- EQUIPE 3 -->
-
+        <!-- GRUPO 3 -->
         <div class="team-group">
-
-          <h3 class="reveal">Programa Criança Feliz</h3>
-
+          <h3 class="team-group-title reveal">Programa Criança Feliz</h3>
           <div class="team-grid">
-		  
+
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa6.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa6.png" alt="Foto de Kátia Cilene"></div>
               <h4>Kátia Cilene</h4>
               <div class="team-role">Supervisora</div>
               <div class="team-time">15 anos de serviço</div>
-            </article>		  
+            </article>
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa9.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa9.png" alt="Foto de Edinete"></div>
               <h4>Edinete</h4>
               <div class="team-role">Visitadora</div>
               <div class="team-time">14 anos de serviço</div>
             </article>
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa10.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa10.png" alt="Foto de Silvana Felinto"></div>
               <h4>Silvana Felinto</h4>
               <div class="team-role">Visitadora</div>
               <div class="team-time">6 anos de serviço</div>
@@ -910,27 +1454,20 @@
           </div>
         </div>
 
-        <!-- EQUIPE 4 -->
-
+        <!-- GRUPO 4 -->
         <div class="team-group">
-
-          <h3 class="reveal">Cadastro Único</h3>
-
+          <h3 class="team-group-title reveal">Cadastro Único</h3>
           <div class="team-grid">
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa1.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa1.png" alt="Foto de Gabriela"></div>
               <h4>Gabriela</h4>
               <div class="team-role">Gestora do CadÚnico</div>
               <div class="team-time">2 anos de serviço</div>
             </article>
 
             <article class="team-card reveal">
-              <div class="team-photo">
-                <img src="images/pessoa1.png" alt="">
-              </div>
+              <div class="team-photo"><img src="images/pessoa1.png" alt="Foto de Taynara"></div>
               <h4>Taynara</h4>
               <div class="team-role">Digitadora</div>
               <div class="team-time">2 anos de serviço</div>
@@ -939,186 +1476,378 @@
           </div>
         </div>
 
-     </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- MURAL -->
-
-    <section id="avisos">
+  <!-- PÁGINA: MURAL DE AVISOS -->
+  <section class="page" id="avisos" data-label="Mural de avisos">
+    <div class="page-inner">
       <div class="container">
 
-        <h2 class="section-title reveal">Mural de avisos</h2>
+        <div class="section-head reveal">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 010 8"/><path d="M14.5 11.5a2 2 0 010 1"/><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+          </div>
+          <h2 class="section-title">Mural de avisos</h2>
+        </div>
 
         <p class="section-subtitle reveal">
           Comunicados, eventos e informações institucionais atualizáveis.
         </p>
 
         <div class="posts-grid">
-          
-		  <!-- Inicio do post do mural -->
-		  
+
+          <!-- ============================================================
+               POSTS DO MURAL
+               — Clique no card para expandir o texto completo.
+               — Para adicionar um post: copie o bloco <article.post-card>.
+               — Para post SEM imagem: remova o <div class="post-image">.
+               — Para post COM imagem: coloque o src correto no <img>.
+               — O botão "Entre em contato" pode ser um link do WhatsApp.
+          ============================================================ -->
+
+          <!-- Post com imagem -->
           <article class="post-card reveal">
             <div class="post-image">
-              <img src="images/post1.png" alt="">
+              <img src="images/post1.png" alt="Imagem do aviso">
             </div>
             <div class="post-content">
-              <span class="post-date">18 Maio 2026</span>
+              <span class="post-date">18 de Maio de 2026</span>
               <h3>Título do post no mural</h3>
               <p class="post-preview">
                 Famílias cadastradas devem comparecer ao CRAS para atualização cadastral obrigatória.
               </p>
               <div class="post-full">
-                O atendimento será realizado durante toda a semana mediante apresentação de documentos pessoais, comprovante de residência e documentos dos membros familiares.
+                O atendimento será realizado durante toda a semana mediante apresentação de documentos pessoais,
+                comprovante de residência e documentos dos membros familiares.
+              </div>
+              <!-- Dica visual de expansão — atualizada pelo JS ao clicar -->
+              <div class="post-expand-hint">
+                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                <span class="expand-label">Ler mais</span>
               </div>
               <a href="#" class="post-btn">Entre em contato</a>
             </div>
           </article>
-          
-		  <!-- Término do post do mural -->
-		  
-		  <!-- Inicio do post do mural -->
-		  
+
+          <!-- Post sem imagem -->
           <article class="post-card reveal">
             <div class="post-content">
-              <span class="post-date">18 Maio de 2026</span>
+              <span class="post-date">18 de Maio de 2026</span>
               <h3>Título do post no mural</h3>
               <p class="post-preview">
                 Famílias cadastradas devem comparecer ao CRAS para atualização cadastral obrigatória.
               </p>
               <div class="post-full">
-                O atendimento será realizado durante toda a semana mediante apresentação de documentos pessoais, comprovante de residência e documentos dos membros familiares.
+                O atendimento será realizado durante toda a semana mediante apresentação de documentos pessoais,
+                comprovante de residência e documentos dos membros familiares.
+              </div>
+              <div class="post-expand-hint">
+                <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                <span class="expand-label">Ler mais</span>
               </div>
               <a href="#" class="post-btn">Entre em contato</a>
             </div>
           </article>
-          
-		  <!-- Término do post do mural -->
-        
-		</div>
+
+        </div>
 
       </div>
-    </section>
 
-  </main>
+      <footer>
+        <div class="container">
+          Desenvolvido por Cesar Santana | Sousa - Paraiba | 2026
+        </div>
+      </footer>
 
-  <!-- FOOTER -->
-
-  <footer>
-    <div class="container">
-      CRAS “Irismar Wanderley da Costa” — Serra Negra do Norte / RN
     </div>
-  </footer>
+  </section>
 
-  <!-- BOTAO INSTALAR PWA -->
+  <!-- ============================================================
+       BOTÃO "INÍCIO" — fixo, visível em todas as páginas internas
+  ============================================================ -->
+  <button class="btn-home" id="btnHome" aria-label="Voltar ao início">
+    <svg viewBox="0 0 24 24">
+      <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+      <path d="M9 21V12h6v9"/>
+    </svg>
+    Início
+  </button>
 
+  <!-- ============================================================
+       BOTÃO INSTALAR PWA
+  ============================================================ -->
   <div class="install-banner" id="installBanner">
-    <button class="install-btn" id="installBtn">
-      Instalar aplicativo
-    </button>
+    <button class="install-btn" id="installBtn">Instalar aplicativo</button>
   </div>
 
   <script>
 
-    // REVEAL ANIMATION
+    /* ============================================================
+       CONFIGURAÇÃO DAS PÁGINAS
+       — pageLabels mapeia id → rótulo exibido no breadcrumb.
+       — Se você criar uma nova seção, adicione a entrada aqui.
+    ============================================================ */
+    const pageLabels = {
+      "hero":        "Início",
+      "quem-somos":  "Quem somos",
+      "whatsapp":    "WhatsApp",
+      "horarios":    "Horários",
+      "equipe":      "Equipe",
+      "avisos":      "Mural de avisos"
+    };
 
-    const reveals = document.querySelectorAll(".reveal");
+    /* ============================================================
+       ESTADO GLOBAL
+    ============================================================ */
+    let currentPage = "hero";
 
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
+    /* ============================================================
+       REFERÊNCIAS DOM
+    ============================================================ */
+    const menuToggle    = document.getElementById("menuToggle");
+    const drawer        = document.getElementById("drawer");
+    const drawerOverlay = document.getElementById("drawerOverlay");
+    const breadcrumb    = document.getElementById("breadcrumb");
+    const breadcrumbLbl = document.getElementById("breadcrumbLabel");
+    const btnHome       = document.getElementById("btnHome");
+    const brandLink     = document.getElementById("brandLink");
+
+    /* ============================================================
+       NAVEGAÇÃO ENTRE PÁGINAS
+       — navigateTo(id) desativa a página atual e ativa a nova.
+       — Também atualiza: drawer links, breadcrumb, botão home.
+    ============================================================ */
+    function navigateTo(targetId) {
+
+      if (targetId === currentPage) {
+        closeDrawer();
+        return;
+      }
+
+      // Desativa página atual
+      const current = document.getElementById(currentPage);
+      if (current) {
+        current.removeAttribute("data-page");
+      }
+
+      // Ativa nova página
+      const next = document.getElementById(targetId);
+      if (next) {
+        next.setAttribute("data-page", "active");
+        // Rola para o topo da nova página
+        next.scrollTop = 0;
+        // Dispara animações de reveal na nova página
+        triggerReveals(next);
+      }
+
+      currentPage = targetId;
+
+      // Atualiza drawer — marca item ativo
+      document.querySelectorAll(".drawer-link").forEach(link => {
+        const isActive = link.dataset.target === targetId;
+        link.classList.toggle("active", isActive);
+        link.setAttribute("aria-current", isActive ? "page" : "false");
+      });
+
+      // Breadcrumb — oculto na home
+      if (targetId === "hero") {
+        breadcrumb.classList.add("hidden");
+        btnHome.classList.remove("visible");
+      } else {
+        breadcrumb.classList.remove("hidden");
+        breadcrumbLbl.textContent = pageLabels[targetId] || targetId;
+        btnHome.classList.add("visible");
+      }
+
+      closeDrawer();
+    }
+
+    /* ============================================================
+       REVEAL ANIMATION
+       — Observa os elementos .reveal dentro da página ativa
+         e adiciona .visible quando entram na viewport.
+    ============================================================ */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
           entry.target.classList.add("visible");
         }
       });
-    },{
-      threshold:0.15
+    }, { threshold: 0.12 });
+
+    function triggerReveals(pageEl) {
+      const elements = pageEl.querySelectorAll(".reveal");
+
+      // Remove .visible de todos para resetar a animação
+      elements.forEach(el => {
+        el.classList.remove("visible");
+        revealObserver.unobserve(el);
+      });
+
+      // Para a hero: o IntersectionObserver não é confiável porque a página
+      // acaba de sair de visibility:hidden — forçamos .visible no próximo frame.
+      // Para outras páginas: o observer funciona normalmente via scroll.
+      if (pageEl.id === "hero") {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            elements.forEach(el => el.classList.add("visible"));
+          });
+        });
+      } else {
+        elements.forEach(el => revealObserver.observe(el));
+      }
+    }
+
+    // Inicia reveals na página hero ao carregar
+    triggerReveals(document.getElementById("hero"));
+
+    /* ============================================================
+       DRAWER — abrir/fechar
+    ============================================================ */
+    function openDrawer() {
+      drawer.classList.add("open");
+      drawerOverlay.classList.add("open");
+      menuToggle.classList.add("open");
+      menuToggle.setAttribute("aria-expanded", "true");
+      drawer.focus();
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("open");
+      drawerOverlay.classList.remove("open");
+      menuToggle.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }
+
+    menuToggle.addEventListener("click", () => {
+      drawer.classList.contains("open") ? closeDrawer() : openDrawer();
     });
 
-    reveals.forEach(el=>observer.observe(el));
+    // Fecha ao clicar fora (no overlay)
+    drawerOverlay.addEventListener("click", closeDrawer);
 
-    // POSTS EXPAND
+    // Fecha com ESC
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDrawer();
+    });
 
-    document.querySelectorAll(".post-card").forEach(card=>{
-      card.addEventListener("click", ()=>{
-        card.classList.toggle("active");
+    /* ============================================================
+       LINKS DO DRAWER → navegação
+    ============================================================ */
+    document.querySelectorAll(".drawer-link").forEach(link => {
+      link.addEventListener("click", () => {
+        navigateTo(link.dataset.target);
       });
     });
 
-    // PWA INSTALL
+    /* ============================================================
+       BOTÕES DA HERO → navegação (data-nav)
+    ============================================================ */
+    document.querySelectorAll("[data-nav]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        navigateTo(btn.dataset.nav);
+      });
+    });
 
+    /* ============================================================
+       BOTÃO "INÍCIO"
+    ============================================================ */
+    btnHome.addEventListener("click", () => navigateTo("hero"));
+
+    /* ============================================================
+       LOGO / BRAND → volta para home
+    ============================================================ */
+    brandLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigateTo("hero");
+    });
+
+    /* ============================================================
+       LINKS EXTERNOS — abrir em nova aba
+       — Aplica target="_blank" em todos os <a> da aplicação,
+         exceto o brandLink que é navegação interna.
+       — rel="noopener noreferrer" é boa prática de segurança
+         ao abrir links em nova aba.
+    ============================================================ */
+    document.querySelectorAll("a").forEach(link => {
+      if (link === brandLink) return;
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener noreferrer");
+    });
+
+    /* ============================================================
+       POSTS DO MURAL — expandir/recolher ao clicar
+    ============================================================ */
+    document.querySelectorAll(".post-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        // Não expande se clicou em link interno
+        if (e.target.closest("a")) return;
+
+        card.classList.toggle("active");
+
+        const label = card.querySelector(".expand-label");
+        if (label) {
+          label.textContent = card.classList.contains("active") ? "Recolher" : "Ler mais";
+        }
+      });
+    });
+
+    /* ============================================================
+       PWA — INSTALAÇÃO
+    ============================================================ */
     let deferredPrompt;
-
     const installBanner = document.getElementById("installBanner");
-    const installBtn = document.getElementById("installBtn");
+    const installBtn    = document.getElementById("installBtn");
 
-    window.addEventListener("beforeinstallprompt", (e)=>{
+    window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBanner.style.display = "block";
     });
 
-    installBtn.addEventListener("click", async ()=>{
-      if(deferredPrompt){
+    installBtn.addEventListener("click", async () => {
+      if (deferredPrompt) {
         deferredPrompt.prompt();
-
         const result = await deferredPrompt.userChoice;
-
-        if(result.outcome === "accepted"){
+        if (result.outcome === "accepted") {
           installBanner.style.display = "none";
         }
-
         deferredPrompt = null;
       }
     });
 
-    // MANIFEST INLINE
-
+    /* ============================================================
+       PWA — MANIFEST INLINE
+       — Altera name e short_name se quiser mudar o nome do app
+         após instalado no dispositivo.
+    ============================================================ */
     const manifest = {
-      name:"InfoCRAS",
-      short_name:"InfoCRAS",
-      start_url:".",
-      display:"standalone",
-      background_color:"#0a0a0f",
-      theme_color:"#0a0a0f",
-      icons:[
-        {
-          src:"images/logo.png",
-          sizes:"512x512",
-          type:"image/png"
-        }
-      ]
+      name: "InfoCRAS",
+      short_name: "InfoCRAS",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#0a0a0f",
+      theme_color: "#0a0a0f",
+      icons: [{ src: "images/logo.png", sizes: "512x512", type: "image/png" }]
     };
 
-    const blob = new Blob(
-      [JSON.stringify(manifest)],
-      {type:"application/json"}
-    );
+    const manifestBlob = new Blob([JSON.stringify(manifest)], { type: "application/json" });
+    document.querySelector("#manifest-placeholder").setAttribute("href", URL.createObjectURL(manifestBlob));
 
-    const manifestURL = URL.createObjectURL(blob);
-
-    document
-      .querySelector("#manifest-placeholder")
-      .setAttribute("href", manifestURL);
-
-    // SERVICE WORKER INLINE
-
-    if("serviceWorker" in navigator){
-
+    /* ============================================================
+       PWA — SERVICE WORKER INLINE
+       — Cache básico. Para adicionar cache de arquivos offline,
+         amplie a lógica dentro do swCode abaixo.
+    ============================================================ */
+    if ("serviceWorker" in navigator) {
       const swCode = `
-        self.addEventListener('install', event => {
-          self.skipWaiting();
-        });
-
-        self.addEventListener('fetch', event => {});
+        self.addEventListener('install', () => self.skipWaiting());
+        self.addEventListener('fetch', () => {});
       `;
-
-      const swBlob = new Blob(
-        [swCode],
-        { type: 'text/javascript' }
-      );
-
-      const swURL = URL.createObjectURL(swBlob);
-
-      navigator.serviceWorker.register(swURL);
-
+      const swBlob = new Blob([swCode], { type: "text/javascript" });
+      navigator.serviceWorker.register(URL.createObjectURL(swBlob));
     }
 
   </script>
