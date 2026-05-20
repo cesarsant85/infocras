@@ -915,6 +915,281 @@
     }
 
     /* ============================================================
+       BADGE "NOVO" NO BOTÃO MURAL
+       — Para ATIVAR:  adicione a classe .has-new ao botão ou elemento desejado
+       — Para DESATIVAR: remova a classe .has-new
+       — Controlado pela constante MURAL_TEM_NOVIDADE no JS (true/false)
+    ============================================================ */
+    .badge-novo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #ff3b5c;
+      color: #fff;
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      padding: 2px 6px;
+      border-radius: 20px;
+      line-height: 1;
+      text-transform: uppercase;
+      margin-left: 6px;
+      animation: pulse-badge 1.8s ease-in-out infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .75; transform: scale(.92); }
+    }
+
+    /* Badge no botão da hero */
+    .btn .badge-novo { font-size: .6rem; padding: 2px 5px; }
+
+    /* Ponto vermelho no ícone do drawer */
+    .drawer-link .drawer-dot {
+      display: none;
+      width: 8px;
+      height: 8px;
+      background: #ff3b5c;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      animation: pulse-badge 1.8s ease-in-out infinite;
+    }
+
+    .drawer-link.has-new .drawer-dot { display: block; }
+
+    /* ============================================================
+       REDES SOCIAIS
+    ============================================================ */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .social-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+      text-decoration: none;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .social-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 38px rgba(0,0,0,.3);
+    }
+
+    .social-card:hover::before { opacity: 1; }
+
+    /* Variantes de cor por rede */
+    .social-card.instagram { --sc: #e1306c; }
+    .social-card.instagram::before { background: linear-gradient(135deg, rgba(225,48,108,.08), transparent); }
+    .social-card.instagram:hover { border-color: rgba(225,48,108,.4); }
+
+    .social-card.facebook { --sc: #1877f2; }
+    .social-card.facebook::before { background: linear-gradient(135deg, rgba(24,119,242,.08), transparent); }
+    .social-card.facebook:hover { border-color: rgba(24,119,242,.4); }
+
+    .social-card.site { --sc: var(--accent); }
+    .social-card.site::before { background: linear-gradient(135deg, rgba(30,167,255,.08), transparent); }
+    .social-card.site:hover { border-color: rgba(30,167,255,.4); }
+
+    .social-card.email { --sc: #f59e0b; }
+    .social-card.email::before { background: linear-gradient(135deg, rgba(245,158,11,.08), transparent); }
+    .social-card.email:hover { border-color: rgba(245,158,11,.4); }
+
+    .social-card.youtube { --sc: #ff0000; }
+    .social-card.youtube::before { background: linear-gradient(135deg, rgba(255,0,0,.08), transparent); }
+    .social-card.youtube:hover { border-color: rgba(255,0,0,.4); }
+
+    .social-icon-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: color-mix(in srgb, var(--sc) 15%, transparent);
+      flex-shrink: 0;
+    }
+
+    .social-icon-wrap svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--sc);
+    }
+
+    .social-card h4 {
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .social-handle {
+      color: var(--sc);
+      font-size: .88rem;
+      font-weight: 600;
+    }
+
+    .social-desc {
+      color: var(--muted);
+      font-size: .88rem;
+      flex: 1;
+    }
+
+    .social-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--sc);
+      font-size: .85rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .social-cta svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--sc);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ============================================================
+       SEÇÃO COMPARTILHAR — QR CODE fullscreen
+    ============================================================ */
+    .share-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100dvh - var(--nav-h));
+      text-align: center;
+      padding: 40px 24px;
+      gap: 28px;
+    }
+
+    .share-qr-wrap {
+      background: #fff;
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: min(340px, 80vw);
+      height: min(340px, 80vw);
+    }
+
+    .share-qr-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .share-title {
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      color: var(--text);
+    }
+
+    .share-sub {
+      color: var(--muted);
+      max-width: 480px;
+      font-size: 1rem;
+    }
+
+    .share-url {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 20px;
+      font-size: .9rem;
+      color: var(--accent);
+      font-family: "Source Sans 3", monospace;
+      word-break: break-all;
+      max-width: 480px;
+    }
+
+    /* ============================================================
+       SEPARADOR NO DRAWER
+    ============================================================ */
+    .drawer-sep {
+      height: 1px;
+      background: rgba(255,255,255,.05);
+      margin: 8px 12px;
+    }
+
+    .drawer-section-label {
+      font-size: .72rem;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 6px 14px 2px;
+      opacity: .6;
+    }
+
+    /* Botão instalar no drawer */
+    .drawer-install-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+      transition: background .25s, color .25s;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid rgba(30,167,255,.2);
+      background: var(--accent-soft);
+      width: 100%;
+      text-align: left;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .drawer-install-btn:hover {
+      background: rgba(30,167,255,.18);
+      border-color: rgba(30,167,255,.4);
+    }
+
+    .drawer-install-btn .drawer-icon { opacity: 1; stroke: var(--accent); }
+
+    /* Imagem da seção Quem Somos */
+    .about-image {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    /* ============================================================
        FOOTER
     ============================================================ */
     footer {
@@ -1070,7 +1345,7 @@
         Equipe
       </button>
 
-      <button class="drawer-link" data-target="avisos">
+      <button class="drawer-link" data-target="avisos" id="drawerLinkAvisos">
         <!-- Ícone: megafone -->
         <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M18 8a6 6 0 010 8"/>
@@ -1078,11 +1353,43 @@
           <path d="M3 9v6h4l5 5V4L7 9H3z"/>
         </svg>
         Mural de avisos
+        <!-- Ponto vermelho de notificação — controlado pelo JS -->
+        <span class="drawer-dot"></span>
+      </button>
+
+      <button class="drawer-link" data-target="redes-sociais">
+        <!-- Ícone: compartilhar/rede -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        Redes sociais
+      </button>
+
+      <button class="drawer-link" data-target="compartilhar">
+        <!-- Ícone: QR code -->
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+          <path d="M14 14h.01M18 14h.01M14 18h.01M18 18h.01M14 21h.01M21 14v7"/>
+        </svg>
+        Compartilhar
+      </button>
+
+      <div class="drawer-sep"></div>
+
+      <!-- Botão Instalar este aplicativo -->
+      <button class="drawer-install-btn" id="drawerInstallBtn">
+        <svg class="drawer-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Instalar este aplicativo
       </button>
 
     </nav>
-
-
 
   </aside>
 
@@ -1111,7 +1418,12 @@
             <button class="btn btn-secondary" data-nav="whatsapp">WhatsApp</button>
             <button class="btn btn-secondary" data-nav="horarios">Horários</button>
             <button class="btn btn-secondary" data-nav="equipe">Equipe</button>
-            <button class="btn btn-secondary" data-nav="avisos">Mural de avisos</button>
+            <button class="btn btn-secondary" data-nav="avisos" id="heroBtnAvisos">
+              Mural de avisos
+              <!-- Badge "Novo" — visível quando MURAL_TEM_NOVIDADE = true no JS -->
+              <span class="badge-novo" id="badgeNovo" style="display:none">Novo</span>
+            </button>
+            <button class="btn btn-secondary" data-nav="redes-sociais">Redes sociais</button>
           </div>
         </div>
 
@@ -1150,12 +1462,23 @@
              — Substitua o conteúdo abaixo pelo texto real do CRAS.
              — Pode incluir parágrafos, listas, etc.
         ============================================================ -->
+
+        <!-- Imagem institucional — substitua "images/fachada.png" pela foto real -->
+        <img
+          src="images/fachada.png"
+          alt="Fachada do CRAS Irismar Wanderley da Costa"
+          class="about-image reveal"
+          onerror="this.style.display='none'"
+        >
+
         <div class="about-box reveal">
-          INSIRA AQUI O TEXTO INSTITUCIONAL DO CRAS.
+          O Centro de Referência de Assistência Social – CRAS "Irismar Wanderley da Costa" é um equipamento público municipal vinculado à Política de Assistência Social e integrante do Sistema Único de Assistência Social – SUAS. Localizado no município de Serra Negra do Norte, o CRAS atua na promoção da proteção social básica, oferecendo atendimento e acompanhamento às famílias e indivíduos em situação de vulnerabilidade e risco social.
           <br><br>
-          Você pode adicionar informações sobre:
-          missão, valores, atuação social, serviços ofertados,
-          programas sociais, atendimento à população e histórico da instituição.
+		  Como principal porta de entrada da assistência social no território, o CRAS desenvolve ações voltadas ao fortalecimento dos vínculos familiares e comunitários, por meio dos serviços de Proteção e Atendimento Integral à Família (PAIF) e do Serviço de Convivência e Fortalecimento de Vínculos (SCFV). Entre as atividades realizadas estão acolhimentos, atendimentos psicossociais, orientações, visitas domiciliares, palestras, reuniões, encaminhamentos para a rede socioassistencial e acompanhamento de programas e benefícios sociais.
+          <br><br>
+		  O trabalho desenvolvido busca garantir o acesso da população aos direitos socioassistenciais, promovendo inclusão, cidadania e melhoria da qualidade de vida. Além disso, o CRAS realiza ações de busca ativa, atualização cadastral, acompanhamento de famílias beneficiárias de programas sociais e articulação com serviços e instituições parceiras do município.
+          <br><br>
+		  Com compromisso, acolhimento e responsabilidade social, o CRAS “Irismar Wanderley da Costa” fortalece diariamente a rede de proteção social de Serra Negra do Norte, contribuindo para a construção de uma comunidade mais justa, participativa e solidária.
         </div>
 
       </div>
@@ -1480,6 +1803,170 @@
     </div>
   </section>
 
+  <!-- PÁGINA: REDES SOCIAIS -->
+  <section class="page" id="redes-sociais" data-label="Redes sociais">
+    <div class="page-inner">
+      <div class="container">
+
+        <div class="section-head reveal">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+          </div>
+          <h2 class="section-title">Redes sociais</h2>
+        </div>
+
+        <p class="section-subtitle reveal">
+          Siga o CRAS nas redes e acompanhe nossas ações e comunicados.
+        </p>
+
+        <div class="social-grid">
+
+          <!-- ============================================================
+               CARDS DE REDES SOCIAIS
+               — Altere o href com o link real de cada canal.
+               — Adicione ou remova cards conforme necessário.
+               — Classes disponíveis: instagram | facebook | site | email | youtube
+          ============================================================ -->
+
+          <a href="https://instagram.com/crasserranegradonorte" class="social-card instagram reveal">
+            <div class="social-icon-wrap">
+              <!-- Ícone Instagram -->
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </div>
+            <h4>Instagram</h4>
+            <div class="social-handle">@crasserranegradonorte</div>
+            <div class="social-desc">Publicações, eventos do CRAS.</div>
+            <div class="social-cta">
+              Seguir
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </a>
+		  
+		            <a href="https://instagram.com/idososativaidade" class="social-card instagram reveal">
+            <div class="social-icon-wrap">
+              <!-- Ícone Instagram -->
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </div>
+            <h4>Instagram</h4>
+            <div class="social-handle">@idososativaidade</div>
+            <div class="social-desc">Serviço de Convivencia e Fortalecimento de Vinculos.</div>
+            <div class="social-cta">
+              Seguir
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </a>
+
+          <!-- <a href="https://facebook.com/crasserranegra" class="social-card facebook reveal">
+            <div class="social-icon-wrap">
+              <!-- Ícone Facebook -->
+              <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </div>
+            <h4>Facebook</h4>
+            <div class="social-handle">CRAS Serra Negra do Norte</div>
+            <div class="social-desc">Página oficial com notícias e programações sociais.</div>
+            <div class="social-cta">
+              Curtir página
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </a> -->
+
+          <a href="https://www.serranegra.rn.gov.br" class="social-card site reveal">
+            <div class="social-icon-wrap">
+              <!-- Ícone Globo/Site -->
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-1 21.945C6.268 21.478 2.5 17.24 2.5 12c0-.343.017-.682.05-1.017L8 16.5v.5c0 1.1.9 2 2 2v2.945zM17.932 19.5c-.268-.787-1-1.5-1.932-1.5h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V9h2c1.1 0 2-.9 2-2V5.2C17.928 6.55 19.5 9.1 19.5 12c0 2.87-1.02 5.5-2.568 7.5z"/>
+              </svg>
+            </div>
+            <h4>Site Oficial do Município</h4>
+            <div class="social-handle">serranegradornorte.rn.gov.br</div>
+            <div class="social-desc">Portal da Prefeitura Municipal de Serra Negra do Norte.</div>
+            <div class="social-cta">
+              Acessar site
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </a>
+
+          <a href="mailto:crassnn@gmail.com" class="social-card email reveal">
+            <div class="social-icon-wrap">
+              <!-- Ícone Email -->
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 4H4c-1.103 0-2 .897-2 2v12c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zm0 2v.511l-8 6.223-8-6.222V6h16zM4 18V9.044l7.386 5.745a.994.994 0 001.228 0L20 9.044 20.002 18H4z"/>
+              </svg>
+            </div>
+            <h4>E-mail</h4>
+            <div class="social-handle">crassnn@gmail.com</div>
+            <div class="social-desc">Envie dúvidas, solicitações ou documentos por e-mail.</div>
+            <div class="social-cta">
+              Enviar e-mail
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </a>
+
+          <!-- <a href="https://youtube.com/@crasserranegra" class="social-card youtube reveal">
+            <div class="social-icon-wrap">
+              <!-- Ícone YouTube -->
+              <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/>
+              </svg>
+            </div>
+            <h4>YouTube</h4>
+            <div class="social-handle">@crasserranegra</div>
+            <div class="social-desc">Vídeos institucionais, palestras e eventos gravados.</div>
+            <div class="social-cta">
+              Assistir
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
+          </a> -->
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PÁGINA: COMPARTILHAR (QR Code) -->
+  <section class="page" id="compartilhar" data-label="Compartilhar">
+    <div class="share-page">
+
+      <div class="reveal">
+        <h2 class="share-title">Compartilhe o InfoCRAS</h2>
+        <p class="share-sub" style="margin-top:8px;">
+          Aponte a câmera do celular para o QR Code abaixo e acesse ou compartilhe este portal.
+        </p>
+      </div>
+
+      <!-- ============================================================
+           QR CODE
+           — Substitua "images/qr.png" pelo arquivo gerado com a URL
+             real da aplicação. Gere em: qr-code-generator.com
+      ============================================================ -->
+      <div class="share-qr-wrap reveal">
+        <img src="images/qr.png" alt="QR Code de acesso ao InfoCRAS"
+             onerror="this.parentElement.innerHTML='<div style=\'color:#333;font-size:.9rem;text-align:center;padding:20px\'>Adicione o arquivo<br><strong>images/qr.png</strong><br>com o QR Code gerado<br>para a URL do app.</div>'">
+      </div>
+
+      <!-- URL exibida abaixo do QR Code -->
+      <div class="share-url reveal" id="shareUrlDisplay">
+        Carregando URL…
+      </div>
+
+      <p class="share-sub reveal" style="font-size:.85rem;">
+        Gere o QR Code em <strong>qr-code-generator.com</strong> usando a URL acima e salve como <code>images/qr.png</code>
+      </p>
+
+    </div>
+  </section>
+
   <!-- PÁGINA: MURAL DE AVISOS -->
   <section class="page" id="avisos" data-label="Mural de avisos">
     <div class="page-inner">
@@ -1514,7 +2001,7 @@
             </div>
             <div class="post-content">
               <span class="post-date">18 de Maio de 2026</span>
-              <h3>Título do post no mural</h3>
+              <h3>Exemplo de post com imagem</h3>
               <p class="post-preview">
                 Famílias cadastradas devem comparecer ao CRAS para atualização cadastral obrigatória.
               </p>
@@ -1535,7 +2022,7 @@
           <article class="post-card reveal">
             <div class="post-content">
               <span class="post-date">18 de Maio de 2026</span>
-              <h3>Título do post no mural</h3>
+              <h3>Exemplo de post sem imagem</h3>
               <p class="post-preview">
                 Famílias cadastradas devem comparecer ao CRAS para atualização cadastral obrigatória.
               </p>
@@ -1590,13 +2077,43 @@
        — Se você criar uma nova seção, adicione a entrada aqui.
     ============================================================ */
     const pageLabels = {
-      "hero":        "Início",
-      "quem-somos":  "Quem somos",
-      "whatsapp":    "WhatsApp",
-      "horarios":    "Horários",
-      "equipe":      "Equipe",
-      "avisos":      "Mural de avisos"
+      "hero":          "Início",
+      "quem-somos":    "Quem somos",
+      "whatsapp":      "WhatsApp",
+      "horarios":      "Horários",
+      "equipe":        "Equipe",
+      "avisos":        "Mural de avisos",
+      "redes-sociais": "Redes sociais",
+      "compartilhar":  "Compartilhar"
     };
+
+    /* ============================================================
+       BADGE "NOVO" NO MURAL DE AVISOS
+       — Para ATIVAR a sinalização de nova publicação:
+           defina  MURAL_TEM_NOVIDADE = true
+       — Para DESATIVAR:
+           defina  MURAL_TEM_NOVIDADE = false
+       — A badge aparece no botão da hero E no ponto do menu lateral.
+    ============================================================ */
+    const MURAL_TEM_NOVIDADE = true; // ← altere aqui (true | false)
+
+    function atualizarBadgeMural() {
+      const badge       = document.getElementById("badgeNovo");
+      const drawerLink  = document.getElementById("drawerLinkAvisos");
+
+      if (badge)      badge.style.display      = MURAL_TEM_NOVIDADE ? "inline-flex" : "none";
+      if (drawerLink) drawerLink.classList.toggle("has-new", MURAL_TEM_NOVIDADE);
+    }
+
+    atualizarBadgeMural();
+
+    /* ============================================================
+       URL DA APLICAÇÃO — exibida na seção Compartilhar
+    ============================================================ */
+    const shareUrlEl = document.getElementById("shareUrlDisplay");
+    if (shareUrlEl) {
+      shareUrlEl.textContent = window.location.href.split("?")[0];
+    }
 
     /* ============================================================
        ESTADO GLOBAL
@@ -1798,8 +2315,9 @@
        PWA — INSTALAÇÃO
     ============================================================ */
     let deferredPrompt;
-    const installBanner = document.getElementById("installBanner");
-    const installBtn    = document.getElementById("installBtn");
+    const installBanner     = document.getElementById("installBanner");
+    const installBtn        = document.getElementById("installBtn");
+    const drawerInstallBtn  = document.getElementById("drawerInstallBtn");
 
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
@@ -1807,7 +2325,7 @@
       installBanner.style.display = "block";
     });
 
-    installBtn.addEventListener("click", async () => {
+    async function triggerInstall() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
         const result = await deferredPrompt.userChoice;
@@ -1815,7 +2333,16 @@
           installBanner.style.display = "none";
         }
         deferredPrompt = null;
+      } else {
+        // Fallback: instrução para iOS / navegadores sem suporte
+        alert("Para instalar: use o menu do seu navegador e escolha 'Adicionar à tela inicial' ou 'Instalar aplicativo'.");
       }
+    }
+
+    installBtn.addEventListener("click", triggerInstall);
+    drawerInstallBtn.addEventListener("click", () => {
+      closeDrawer();
+      triggerInstall();
     });
 
     /* ============================================================
